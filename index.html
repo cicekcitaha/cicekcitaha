@@ -1,0 +1,2911 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Çiçekçi Taha | Sonsuz Botanik Bahçesi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Fraunces (Şık botanik başlıklar için) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tone.js (Tatmin edici tıklama ve evrim ses efektleri için) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Fraunces"', 'serif'],
+                    },
+                    colors: {
+                        botanic: {
+                            50: '#f2fbf5',
+                            100: '#e1f6e8',
+                            200: '#c3ecd2',
+                            500: '#22a05b',
+                            600: '#168047',
+                            700: '#13663a',
+                            800: '#125131',
+                            900: '#10432a',
+                        },
+                        cream: '#FDFBF7',
+                        petal: '#FCE7F3',
+                        gold: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Mobil dokunma deneyimi için çift tıklama zoom engelleme ve seçim kapatma */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        html, body {
+            touch-action: manipulation;
+            background-color: #FDFBF7;
+            overscroll-behavior-y: contain;
+        }
+
+        /* Özel animasyonlar */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1.5deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.55; transform: scale(0.96); }
+            50% { opacity: 0.9; transform: scale(1.06); }
+        }
+
+        @keyframes floatUpFade {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -20%) scale(0.8);
+            }
+            20% {
+                transform: translate(-50%, -60%) scale(1.15);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -180%) scale(0.95);
+            }
+        }
+
+        @keyframes particleFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.4);
+            }
+        }
+
+        @keyframes rainDrop {
+            0% { transform: translateY(-20px); opacity: 0; }
+            20% { opacity: 0.7; }
+            100% { transform: translateY(420px); opacity: 0; }
+        }
+
+        @keyframes ladybugWiggle {
+            0%, 100% { transform: rotate(-12deg) scale(1); }
+            50% { transform: rotate(12deg) scale(1.1); }
+        }
+
+        .animate-float-flower {
+            animation: floatSlow 3.6s ease-in-out infinite;
+        }
+
+        .animate-aura {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .floating-number {
+            position: fixed;
+            pointer-events: none;
+            z-index: 60;
+            font-weight: 800;
+            animation: floatUpFade 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .petal-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 55;
+            animation: particleFly 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .rain-streak {
+            position: absolute;
+            width: 2px;
+            height: 18px;
+            background: linear-gradient(to bottom, rgba(56, 189, 248, 0), rgba(56, 189, 248, 0.85));
+            border-radius: 999px;
+            animation: rainDrop 0.8s linear infinite;
+            pointer-events: none;
+        }
+
+        .flower-tap-zone:active .flower-inner {
+            transform: scale(0.89) !important;
+            transition: transform 0.06s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .flower-inner {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Süslü Bahçe Atmosfer Animasyonları (Sakin & Göz Yormayan) */
+        @keyframes twinkleLight {
+            0%, 100% { opacity: 0.55; }
+            50% { opacity: 0.95; }
+        }
+
+        @keyframes companionOrbitLeft {
+            0%, 100% { transform: translate(0px, 0px) rotate(-6deg); }
+            25% { transform: translate(14px, -12px) rotate(4deg); }
+            50% { transform: translate(26px, 2px) rotate(8deg); }
+            75% { transform: translate(10px, 10px) rotate(-2deg); }
+        }
+
+        @keyframes companionOrbitRight {
+            0%, 100% { transform: translate(0px, 0px) rotate(6deg); }
+            33% { transform: translate(-18px, -14px) rotate(-6deg); }
+            66% { transform: translate(-8px, 10px) rotate(4deg); }
+        }
+
+        .fairy-bulb {
+            animation: twinkleLight 3.2s ease-in-out infinite;
+        }
+
+        .garden-lattice-bg {
+            background-image:
+                radial-gradient(circle at 50% 42%, rgba(254, 249, 195, 0.72) 0%, rgba(236, 253, 245, 0.2) 55%, rgba(209, 250, 229, 0.45) 100%),
+                linear-gradient(to right, rgba(22, 128, 71, 0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(22, 128, 71, 0.06) 1px, transparent 1px);
+            background-size: 100% 100%, 28px 28px, 28px 28px;
+        }
+
+        .companion-float-left {
+            animation: companionOrbitLeft 4.4s ease-in-out infinite;
+        }
+
+        .companion-float-right {
+            animation: companionOrbitRight 5.1s ease-in-out infinite;
+        }
+
+        /* Özel kaydırma çubuğu */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3ecd2;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-[100dvh] flex flex-col overflow-hidden bg-gradient-to-b from-botanic-50 via-cream to-rose-50/40">
+
+    <!-- Üst Başlık ve Dükkan Kimliği -->
+    <header class="shrink-0 bg-white/90 backdrop-blur-md border-b border-botanic-100 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-sm gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-2xl bg-gradient-to-br from-botanic-500 to-botanic-700 flex items-center justify-center text-white shadow-md shadow-botanic-500/20">
+                <i class="ph-fill ph-flower-lotus text-xl sm:text-2xl"></i>
+            </div>
+            <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                    <h1 class="font-serif font-bold text-base sm:text-lg text-botanic-900 leading-tight tracking-tight truncate">Çiçekçi Taha</h1>
+                    <span id="prestigeBadge" class="hidden shrink-0 px-1.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-md border border-amber-300">
+                        ✨ N.<span id="prestigeLevelText">1</span>
+                    </span>
+                </div>
+                <p class="text-[10px] sm:text-[11px] text-botanic-700/80 font-medium truncate">Sevgiyle Büyüyen Dijital Bahçe</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Kayıtlı Bahçeci Profil Butonu -->
+            <button id="headerProfileBtn" onclick="openProfileModal()" class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 flex items-center gap-1.5 transition active:scale-95 max-w-[115px] sm:max-w-[140px]">
+                <span id="headerUserAvatar" class="text-sm leading-none">🌱</span>
+                <span id="headerUserName" class="text-[11px] font-extrabold truncate">Misafir</span>
+            </button>
+            <!-- Ses Aç/Kapa -->
+            <button id="soundToggleBtn" onclick="toggleSound()" aria-label="Sesi Aç veya Kapat" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-botanic-50 hover:bg-botanic-100 text-botanic-700 flex items-center justify-center transition active:scale-95 border border-botanic-200/60">
+                <i id="soundIcon" class="ph-bold ph-speaker-high text-base sm:text-lg"></i>
+            </button>
+            <!-- Dükkan Kartvizit / Sipariş Butonu -->
+            <button onclick="switchTab('shopInfo')" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 text-white text-[11px] sm:text-xs font-bold shadow-md shadow-rose-500/20 flex items-center gap-1 active:scale-95 transition">
+                <i class="ph-fill ph-storefront text-sm"></i>
+                <span class="hidden xs:inline sm:inline">Dükkan</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Skor & İstatistik Panosu (Her zaman görünür) -->
+    <section class="shrink-0 px-4 pt-2.5 pb-1.5 z-20">
+        <div class="max-w-lg mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-3 border border-botanic-100 shadow-sm flex items-center justify-between">
+            <div>
+                <div class="flex items-center gap-1 text-xs font-semibold text-botanic-700">
+                    <i class="ph-fill ph-sparkle text-amber-500"></i>
+                    <span>Toplam Polen & Yaprak</span>
+                </div>
+                <div id="pollenDisplay" class="font-serif text-2xl sm:text-3xl font-extrabold text-botanic-900 tracking-tight mt-0.5">
+                    0
+                </div>
+            </div>
+
+            <div class="flex gap-2 text-right">
+                <div class="bg-botanic-50 px-2.5 py-1.5 rounded-xl border border-botanic-100">
+                    <div class="text-[10px] font-semibold text-botanic-600 uppercase">Tık Gücü</div>
+                    <div id="cpcDisplay" class="text-xs sm:text-sm font-extrabold text-botanic-900">+1</div>
+                </div>
+                <div class="bg-amber-50 px-2.5 py-1.5 rounded-xl border border-amber-200/70">
+                    <div class="text-[10px] font-semibold text-amber-700 uppercase">Saniyede</div>
+                    <div id="cpsDisplay" class="text-xs sm:text-sm font-extrabold text-amber-900">0/sn</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANA İÇERİK ALANI (Sekmelere göre değişir) -->
+    <main class="flex-1 overflow-y-auto relative px-4 pb-24">
+        <div class="max-w-lg mx-auto h-full">
+
+            <!-- SEKME 1: BAHÇEM (Ana Clicker Ekranı) -->
+            <div id="tab-garden" class="tab-content h-full flex flex-col justify-between py-2">
+                
+                <!-- Çiçek Künyesi ve Evrim İlerleme Çubuğu -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-3 border border-botanic-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <div class="flex items-center gap-2">
+                            <span id="stageBadge" class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-botanic-100 text-botanic-800">
+                                Aşama 1/20
+                            </span>
+                            <h2 id="flowerName" class="font-serif font-bold text-base text-slate-800">Minik Yaşam Tohumu</h2>
+                        </div>
+                        <span id="flowerPassiveTag" class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                            1x Çarpan
+                        </span>
+                    </div>
+                    <p id="flowerDesc" class="text-xs text-slate-500 mb-2">Taha'nın özenle seçtiği ilk sihirli tohum. Dokun ve filizlendir!</p>
+                    
+                    <!-- Sonraki Evrim İlerleme Çubuğu -->
+                    <div class="w-full h-2.5 bg-botanic-100 rounded-full overflow-hidden p-0.5">
+                        <div id="evoProgressBar" class="h-full bg-gradient-to-r from-botanic-500 to-emerald-400 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between items-center mt-1 text-[10px] font-semibold text-slate-500">
+                        <span id="nextEvoLabel">Sonraki: Yeşil Bahar Filizi</span>
+                        <span id="nextEvoCostText">0 / 1.000</span>
+                    </div>
+                </div>
+
+                <!-- ORTA ALAN: Sabit Botanik Desenli Zarif Sera Sahnesi -->
+                <div id="gardenStageArea" class="relative flex-1 min-h-[245px] flex flex-col items-center justify-between my-2 rounded-3xl garden-lattice-bg bg-gradient-to-b from-emerald-50/90 via-cream to-amber-50/75 border-2 border-botanic-200/90 shadow-inner overflow-hidden">
+                    
+                    <!-- Sabit Zarif Sera Vitray & Botanik Çerçeve Desenleri -->
+                    <svg viewBox="0 0 400 320" preserveAspectRatio="none" class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-75">
+                        <!-- Dış İnce Altın & Zümrüt Çerçeve -->
+                        <rect x="8" y="8" width="384" height="292" rx="20" fill="none" stroke="#168047" stroke-width="1.2" stroke-opacity="0.22"/>
+                        <rect x="13" y="13" width="374" height="282" rx="16" fill="none" stroke="#d97706" stroke-width="0.9" stroke-dasharray="6 4" stroke-opacity="0.28"/>
+                        <!-- Sera Kubbe Kemer Çizgileri (Sabit) -->
+                        <path d="M45 300 L45 95 Q200 18 355 95 L355 300" fill="none" stroke="#15803d" stroke-width="1.2" stroke-opacity="0.16"/>
+                        <path d="M115 300 L115 65 Q200 28 285 65 L285 300" fill="none" stroke="#15803d" stroke-width="1" stroke-opacity="0.12"/>
+                        <!-- Sol Alt ve Sağ Alt Botanik Filigran Süslemeleri -->
+                        <g stroke="#15803d" stroke-width="1.4" fill="none" stroke-opacity="0.26">
+                            <path d="M16 268 Q34 268 38 248 Q22 252 16 268 Z"/>
+                            <path d="M16 245 Q30 242 32 228 Q20 232 16 245 Z"/>
+                            <path d="M384 268 Q366 268 362 248 Q378 252 384 268 Z"/>
+                            <path d="M384 245 Q370 242 368 228 Q380 232 384 245 Z"/>
+                        </g>
+                    </svg>
+
+                    <!-- Üst Sera Kemeri, Sarmaşıklar ve Sabit Işıltılı Peri Lambaları -->
+                    <svg viewBox="0 0 400 95" preserveAspectRatio="none" class="absolute top-0 inset-x-0 w-full h-20 sm:h-24 pointer-events-none z-10">
+                        <!-- Altın & Zümrüt Sera Kemeri -->
+                        <path d="M0 0 L400 0 L400 32 Q320 68 200 24 Q80 68 0 32 Z" fill="rgba(22, 128, 71, 0.11)"/>
+                        <path d="M-5 28 Q90 66 200 22 Q310 66 405 28" stroke="#15803d" stroke-width="3.5" fill="none"/>
+                        <path d="M-5 33 Q90 71 200 27 Q310 71 405 33" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="4 4" fill="none"/>
+                        <!-- Sarmaşık Yaprakları ve Küçük Güller -->
+                        <g fill="#16a34a">
+                            <ellipse cx="26" cy="36" rx="9" ry="5" transform="rotate(25 26 36)"/>
+                            <ellipse cx="64" cy="46" rx="10" ry="5" transform="rotate(15 64 46)"/>
+                            <ellipse cx="115" cy="43" rx="9" ry="5" transform="rotate(-12 115 43)"/>
+                            <ellipse cx="285" cy="43" rx="9" ry="5" transform="rotate(12 285 43)"/>
+                            <ellipse cx="336" cy="46" rx="10" ry="5" transform="rotate(-15 336 46)"/>
+                            <ellipse cx="374" cy="36" rx="9" ry="5" transform="rotate(-25 374 36)"/>
+                        </g>
+                        <circle cx="46" cy="42" r="5" fill="#fb7185"/>
+                        <circle cx="145" cy="34" r="4.5" fill="#f43f5e"/>
+                        <circle cx="255" cy="34" r="4.5" fill="#f43f5e"/>
+                        <circle cx="354" cy="42" r="5" fill="#fb7185"/>
+                        <!-- Peri Işıkları -->
+                        <circle cx="35" cy="44" r="3.8" fill="#fde047" class="fairy-bulb" style="animation-delay: 0s;"/>
+                        <circle cx="90" cy="51" r="4.2" fill="#fef08a" class="fairy-bulb" style="animation-delay: 0.4s;"/>
+                        <circle cx="155" cy="36" r="3.8" fill="#fde047" class="fairy-bulb" style="animation-delay: 0.8s;"/>
+                        <circle cx="200" cy="28" r="4.2" fill="#fef08a" class="fairy-bulb" style="animation-delay: 1.2s;"/>
+                        <circle cx="245" cy="36" r="3.8" fill="#fde047" class="fairy-bulb" style="animation-delay: 1.6s;"/>
+                        <circle cx="310" cy="51" r="4.2" fill="#fef08a" class="fairy-bulb" style="animation-delay: 2.0s;"/>
+                        <circle cx="365" cy="44" r="3.8" fill="#fde047" class="fairy-bulb" style="animation-delay: 0.5s;"/>
+                    </svg>
+
+                    <!-- Sol & Sağ Yan Sabit Dekoratif Eğrelti, Saksı ve Bahçe Çiçekleri -->
+                    <svg viewBox="0 0 90 190" class="absolute left-0 bottom-10 w-16 sm:w-20 h-36 sm:h-44 pointer-events-none z-10 opacity-95">
+                        <path d="M-5 168 Q30 132 18 78 Q8 120 -5 142 Z" fill="#15803d"/>
+                        <path d="M-5 152 Q44 140 50 104 Q22 116 -5 128 Z" fill="#22c55e"/>
+                        <path d="M-5 176 Q36 168 44 148 Q18 152 -5 162 Z" fill="#16a34a"/>
+                        <circle cx="22" cy="112" r="7" fill="#f472b6"/>
+                        <circle cx="22" cy="112" r="3" fill="#fef08a"/>
+                        <circle cx="13" cy="138" r="6" fill="#fb7185"/>
+                        <circle cx="32" cy="153" r="5" fill="#fde047"/>
+                    </svg>
+                    <svg viewBox="0 0 90 190" class="absolute right-0 bottom-10 w-16 sm:w-20 h-36 sm:h-44 pointer-events-none z-10 opacity-95">
+                        <path d="M95 168 Q60 132 72 78 Q82 120 95 142 Z" fill="#15803d"/>
+                        <path d="M95 152 Q46 140 40 104 Q68 116 95 128 Z" fill="#22c55e"/>
+                        <path d="M95 176 Q54 168 46 148 Q72 152 95 162 Z" fill="#16a34a"/>
+                        <circle cx="68" cy="112" r="7" fill="#a78bfa"/>
+                        <circle cx="68" cy="112" r="3" fill="#fef08a"/>
+                        <circle cx="77" cy="138" r="6" fill="#facc15"/>
+                        <circle cx="58" cy="153" r="5" fill="#38bdf8"/>
+                    </svg>
+
+                    <!-- Aktif Yağmur Buff Göstergesi -->
+                    <div id="activeBuffBanner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 z-30 px-3 py-1 rounded-full bg-sky-500/95 text-white text-[11px] font-bold shadow-md backdrop-blur-sm flex items-center gap-1.5">
+                        <span>🌧️</span>
+                        <span id="buffTimerText">Bereket Yağmuru: 15s (2x)</span>
+                    </div>
+
+                    <!-- Yağmur Efekti Katmanı -->
+                    <div id="rainContainer" class="inset-0 absolute pointer-events-none hidden z-20"></div>
+
+                    <!-- Rastgele Beliren Altın Uğur Böceği -->
+                    <button id="goldenLadybug" onclick="claimLadybug(event)" class="hidden absolute z-40 w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 to-red-500 shadow-lg shadow-amber-500/40 border-2 border-white flex items-center justify-center text-2xl cursor-pointer active:scale-90 transition" style="animation: ladybugWiggle 0.8s ease-in-out infinite;" title="Şanslı Uğur Böceği! Tıkla!">
+                        🐞
+                    </button>
+
+                    <!-- Arka Plan Işık Halesi (Evrimleştikçe renklenir) -->
+                    <div id="flowerAura" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-emerald-300/35 blur-2xl animate-aura pointer-events-none"></div>
+
+                    <!-- Dinamik Bahçe Dostları Katmanı (Arılar ve Kelebekler yükseltme aldıkça görünür) -->
+                    <div id="gardenCompanionsLayer" class="absolute inset-0 pointer-events-none z-20"></div>
+
+                    <!-- Tıklama Alanı -->
+                    <div id="flowerClickTarget" class="flower-tap-zone relative z-20 flex-1 w-full cursor-pointer flex flex-col items-center justify-center pt-5 pb-1 px-4">
+                        <div id="flowerVisualContainer" class="flower-inner animate-float-flower w-44 h-44 sm:w-56 sm:h-56 flex items-center justify-center drop-shadow-xl">
+                            <!-- Dinamik SVG Çiçek Buraya Render Edilir -->
+                        </div>
+                    </div>
+
+                    <!-- Alt Ahşap Dükkan Tezgahı & Açılan Dekoratif Objeler -->
+                    <div class="relative w-full h-11 shrink-0 z-20 pointer-events-none flex items-end justify-between px-5 sm:px-10">
+                        <!-- Sol Tezgah Objeleri (Sulama Kabı / Gübre) -->
+                        <div id="shelfLeftProps" class="flex items-end gap-1.5 mb-2.5 text-xl sm:text-2xl drop-shadow"></div>
+
+                        <!-- Orta Tıklama İpucu Rozeti -->
+                        <div class="mb-2 px-3 py-0.5 rounded-full bg-white/90 text-botanic-900 text-[10px] sm:text-[11px] font-extrabold shadow-sm border border-botanic-200/80 whitespace-nowrap">
+                            ✨ Büyütmek için çiçeğe dokun
+                        </div>
+
+                        <!-- Sağ Tezgah Objeleri (Fener / İklim Kubbesi) -->
+                        <div id="shelfRightProps" class="flex items-end gap-1.5 mb-2.5 text-xl sm:text-2xl drop-shadow"></div>
+
+                        <!-- Ahşap & Yosunlu Bahçe Tezgahı Zemini -->
+                        <div class="absolute inset-x-0 bottom-0 h-3.5 bg-gradient-to-r from-amber-800 via-amber-700 to-amber-800 border-t-2 border-emerald-500/70"></div>
+                    </div>
+                </div>
+
+                <!-- ALT AKSİYON BUTONLARI: Evrimleştir & Bereket Yağmuru -->
+                <div class="grid grid-cols-12 gap-2">
+                    <button id="evolveBtn" onclick="evolveFlower()" disabled class="col-span-8 py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-between bg-slate-200 text-slate-400 transition active:scale-95">
+                        <div class="flex items-center gap-2.5 text-left min-w-0">
+                            <span id="evolveBtnIcon" class="text-2xl shrink-0">🌱</span>
+                            <div class="min-w-0">
+                                <div id="evolveBtnTitle" class="text-xs sm:text-sm font-extrabold truncate">Çiçeği Evrimleştir</div>
+                                <div id="evolveBtnSub" class="text-[10px] opacity-85 truncate">1.000 Polen Gerekli</div>
+                            </div>
+                        </div>
+                        <i class="ph-bold ph-arrow-up-right text-lg shrink-0"></i>
+                    </button>
+
+                    <button id="rainSkillBtn" onclick="triggerRainSkill()" class="col-span-4 py-3 px-2 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white font-bold flex flex-col items-center justify-center shadow-md shadow-sky-500/20 active:scale-95 transition disabled:opacity-50">
+                        <span class="text-lg leading-none">🌧️</span>
+                        <span class="text-[11px] font-extrabold mt-1">Yağmur</span>
+                        <span id="rainCooldownText" class="text-[9px] opacity-90">Hazır (2x)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SEKME 2: MAĞAZA & AR-GE (Yükseltmeler ve Sinerji Araştırmaları) -->
+            <div id="tab-upgrades" class="tab-content hidden py-3 space-y-3">
+                <!-- Üst Filtre ve Toplu Alım Seçici -->
+                <div class="bg-white rounded-2xl p-2.5 border border-botanic-100 shadow-sm space-y-2">
+                    <div class="flex bg-botanic-50 p-1 rounded-xl gap-1">
+                        <button id="filter-all" onclick="filterShop('all')" class="shop-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-botanic-900 shadow-sm transition">Tümü</button>
+                        <button id="filter-click" onclick="filterShop('click')" class="shop-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg text-botanic-700 hover:text-botanic-900 transition">Tık Gücü</button>
+                        <button id="filter-auto" onclick="filterShop('auto')" class="shop-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg text-botanic-700 hover:text-botanic-900 transition">Otomasyon</button>
+                        <button id="filter-research" onclick="filterShop('research')" class="shop-filter-btn relative flex-1 py-1.5 text-xs font-bold rounded-lg text-botanic-700 hover:text-botanic-900 transition">
+                            Ar-Ge
+                            <span id="researchReadyDot" class="hidden absolute top-1 right-1.5 w-2 h-2 rounded-full bg-amber-500"></span>
+                        </button>
+                    </div>
+
+                    <div id="bulkBuyBar" class="flex items-center justify-between px-1">
+                        <span class="text-[11px] font-semibold text-slate-500">Alım Miktarı (Her 25 Sv. = 2x):</span>
+                        <div class="flex gap-1">
+                            <button id="mult-1" onclick="setBuyMultiplier(1)" class="mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-botanic-600 text-white">1x</button>
+                            <button id="mult-10" onclick="setBuyMultiplier(10)" class="mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">10x</button>
+                            <button id="mult-25" onclick="setBuyMultiplier(25)" class="mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">25x</button>
+                            <button id="mult-max" onclick="setBuyMultiplier('max')" class="mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">MAX</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yükseltme / Araştırma Listesi -->
+                <div id="upgradesList" class="space-y-2 pb-4">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+
+            <!-- SEKME 3: EVRİM AĞACI & SONSUZLUK (PRESTIGE) -->
+            <div id="tab-evolutions" class="tab-content hidden py-3 space-y-4">
+                <!-- Prestige (Altın Nesil Tohumu) Kartı -->
+                <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 rounded-2xl p-4 text-white shadow-lg relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-md text-[11px] font-bold uppercase tracking-wider">Sonsuzluk Döngüsü</span>
+                            <span class="text-xs font-bold bg-black/20 px-2 py-0.5 rounded-md">Mevcut Bonus: +%<span id="currentPrestigeBonus">0</span></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold mt-1">Altın Nesil Tohumu</h3>
+                        <p class="text-xs text-white/95 mt-1 leading-relaxed">
+                            İlerleme zorlaştığında bahçeni sıfırlayıp <strong>Altın Nesil Tohumu</strong> ek! Her bir tohum tüm üretimini kalıcı olarak <strong>+%10</strong> artırır. (100 Tn+ toplam polende birikmeye başlar)
+                        </p>
+                        <div class="mt-3 pt-3 border-t border-white/20 flex items-center justify-between gap-2">
+                            <div>
+                                <div class="text-[10px] uppercase opacity-80">Kazanılacak Yeni Tohum</div>
+                                <div id="pendingPrestigeGain" class="text-base font-extrabold">+0 Tohum</div>
+                            </div>
+                            <button id="prestigeBtn" onclick="openPrestigeModal()" disabled class="px-4 py-2.5 rounded-xl bg-white text-orange-600 font-extrabold text-xs shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition">
+                                Yeni Nesil Ek ✨
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canlı Dükkan Bahçecileri Sıralaması (Firestore Multi-User Leaderboard) -->
+                <div class="bg-white rounded-2xl p-3 border border-amber-200/80 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-serif font-bold text-base text-botanic-900 flex items-center gap-1.5">
+                            <span>🏆</span>
+                            <span>Dükkan Bahçecileri Sıralaması</span>
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Canlı</span>
+                    </div>
+                    <div id="leaderboardList" class="space-y-1.5">
+                        <div class="text-xs text-slate-400 text-center py-3">Bahçeciler yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- Çiçek Koleksiyonu / Evrim Listesi -->
+                <div class="bg-white rounded-2xl p-3 border border-botanic-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-serif font-bold text-base text-botanic-900">Botanik Evrim Kataloğu (20 Tür)</h3>
+                        <span id="catalogProgressText" class="text-[11px] font-bold text-botanic-600">1 / 20 Açıldı</span>
+                    </div>
+                    <div id="evolutionCatalogList" class="space-y-2 pb-2">
+                        <!-- JS ile doldurulacak -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEKME 4: ÇİÇEKÇİ TAHA DÜKKAN TANITIMI & İLETİŞİM -->
+            <div id="tab-shopInfo" class="tab-content hidden py-3 space-y-4">
+                <!-- Kahraman Kartı -->
+                <div class="bg-white rounded-3xl p-5 border border-botanic-100 shadow-sm text-center relative overflow-hidden">
+                    <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-botanic-500 to-emerald-700 text-white flex items-center justify-center text-4xl shadow-lg shadow-botanic-500/25 mb-3">
+                        💐
+                    </div>
+                    <h2 class="font-serif text-2xl font-extrabold text-botanic-900">Çiçekçi Taha</h2>
+                    <p class="text-xs font-semibold text-rose-500 uppercase tracking-wider mt-0.5">Taze Çiçek • Özel Buket • Canlı Bitki Tasarımı</p>
+                    <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                        Hoş geldiniz! Dükkanımızın camındaki karekodu okutup bu mini oyuna katıldığınız için teşekkürler. Tıpkı oyundaki gibi, gerçek hayatta da her çiçeği sevgi ve özenle büyütüyoruz.
+                    </p>
+
+                    <!-- Hızlı İletişim / Sipariş Butonları -->
+                    <div class="grid grid-cols-2 gap-2.5 mt-4">
+                        <a href="https://wa.me/905550000000?text=Merhaba%20%C3%87i%C3%A7ek%C3%A7i%20Taha!%20Oyundan%20geliyorum%2C%20%C3%A7i%C3%A7ek%20sipari%C5%9Fi%20vermek%20istiyorum%20%F0%9F%8C%B8" target="_blank" rel="noopener noreferrer" class="py-3 px-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95 transition">
+                            <i class="ph-fill ph-whatsapp-logo text-lg"></i>
+                            <span>WhatsApp Sipariş</span>
+                        </a>
+                        <a href="https://instagram.com/cicekci.taha" target="_blank" rel="noopener noreferrer" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 transition">
+                            <i class="ph-fill ph-instagram-logo text-lg"></i>
+                            <span>Instagram'da Biz</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Öne Çıkan Hizmetler -->
+                <div class="bg-white rounded-2xl p-4 border border-botanic-100 shadow-sm space-y-3">
+                    <h3 class="font-serif font-bold text-base text-botanic-900 flex items-center gap-2">
+                        <i class="ph-fill ph-sparkle text-amber-500"></i> Dükkanımızda Neler Var?
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2.5 text-xs">
+                        <div class="p-3 rounded-xl bg-rose-50/70 border border-rose-100">
+                            <div class="text-lg mb-1">🌹</div>
+                            <div class="font-bold text-slate-800">Özel Gün Buketleri</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Kişiye özel taze kesme çiçek tasarımları</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-botanic-50/80 border border-botanic-100">
+                            <div class="text-lg mb-1">🪴</div>
+                            <div class="font-bold text-slate-800">Salon & Ofis Bitkileri</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Orkide, Bonsai, Monstera ve sukulentler</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-100">
+                            <div class="text-lg mb-1">💍</div>
+                            <div class="font-bold text-slate-800">Kız İsteme & Düğün</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Gelin el çiçeği ve özel çikolata aranjmanı</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-100">
+                            <div class="text-lg mb-1">🚚</div>
+                            <div class="font-bold text-slate-800">Aynı Gün Teslimat</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Sevdiklerinize taptaze ve hızlı ulaşım</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Müşteri Kupon Kodu -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-200">
+                    <div class="flex items-center gap-2 text-amber-800 font-bold text-sm">
+                        <i class="ph-fill ph-gift text-lg text-amber-600"></i>
+                        <span>Vitrin QR Ziyaretçilerine Özel!</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1">
+                        Bu oyunu oynayıp 4. seviyeye gelen ve kasada gösteren herkese tüm buket ve saksı çiçeklerinde <b>%10 İndirim</b> hediye!
+                    </p>
+                    <div class="mt-2.5 flex items-center gap-2">
+                        <div class="flex-1 bg-white border border-dashed border-amber-400 rounded-xl px-3 py-2 text-center font-mono font-extrabold text-sm text-amber-900 tracking-wider" id="promoCodeText">
+                            TAHA10
+                        </div>
+                        <button onclick="copyPromoCode()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm active:scale-95 transition">
+                            Kopyala
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Oyunu Sıfırlama Seçeneği -->
+                <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-700">Kayıt & İlerleme Yönetimi</div>
+                        <div class="text-[11px] text-slate-500">Oyuna en baştan, sıfır tohumla başlamak istersen:</div>
+                    </div>
+                    <button onclick="confirmHardReset()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold active:scale-95 transition">
+                        Sıfırla
+                    </button>
+                </div>
+
+                <!-- Bulut Üyelik Veritabanı Durumu & Kayıtlı Üyeler (Dükkan QR Yayını İçin) -->
+                <div class="bg-white rounded-2xl p-4 border border-botanic-200/80 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-serif font-bold text-sm text-botanic-900 flex items-center gap-1.5">
+                                <span>☁️</span>
+                                <span>Üyelik & Bulut Veritabanı Durumu</span>
+                            </h3>
+                            <p id="shopDbStatusText" class="text-[11px] text-slate-500 mt-0.5">Bağlantı kontrol ediliyor...</p>
+                        </div>
+                        <span id="shopDbStatusPill" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">
+                            Kontrol Ediliyor
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-botanic-50/70 border border-botanic-100 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-[11px] font-bold text-botanic-900">Toplam Kayıtlı Bahçeci Üye</div>
+                            <div id="registeredMembersCount" class="text-base font-extrabold text-botanic-700">0 Üye</div>
+                        </div>
+                        
+                    </div>
+
+                    <details class="group rounded-xl bg-slate-50 border border-slate-200/80 p-2.5">
+                        <summary class="text-xs font-bold text-slate-700 cursor-pointer flex items-center justify-between list-none">
+                            <span>📋 Kayıtlı Üye Listesini Gör (Canlı)</span>
+                            <i class="ph-bold ph-caret-down text-slate-500 group-open:rotate-180 transition-transform"></i>
+                        </summary>
+                        <div id="registeredMembersList" class="mt-2.5 space-y-1.5 max-h-48 overflow-y-auto">
+                            <div class="text-[11px] text-slate-400 text-center py-2">Henüz kayıtlı üye bulunmuyor.</div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- SAYFA ALTI: NASIL OYNANIR / SSS & YASAL BİLGİLENDİRME MERKEZİ -->
+            <footer class="mt-6 pt-4 pb-6 border-t border-botanic-200/70 space-y-4">
+                <!-- Nasıl Oynanır & Sıkça Sorulan Sorular (SSS) -->
+                <section class="bg-white/95 rounded-2xl p-4 border border-botanic-100 shadow-sm space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif font-bold text-sm sm:text-base text-botanic-900 flex items-center gap-1.5">
+                            <span>📖</span>
+                            <span>Nasıl Oynanır & Sıkça Sorulan Sorular (SSS)</span>
+                        </h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-botanic-50 text-botanic-700 border border-botanic-200">Rehber</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <details class="group rounded-xl bg-botanic-50/60 border border-botanic-100 p-2.5">
+                            <summary class="font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
+                                <span>1. Çiçeğimi nasıl büyütür ve evrimleştiririm?</span>
+                                <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-1.5 leading-relaxed">
+                                Bahçendeki çiçeğe dokunarak polen topla. Biriken polenlerle <strong>Mağaza</strong> sekmesinden tık gücünü ve otomatik arı/sera üretimini artır. Yeterli polene ulaştığında <strong>Çiçeği Evrimleştir</strong> butonuna basarak 20 farklı botanik türünün kilidini açabilirsin.
+                            </p>
+                        </details>
+
+                        <details class="group rounded-xl bg-botanic-50/60 border border-botanic-100 p-2.5">
+                            <summary class="font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
+                                <span>2. Başka telefondan veya bilgisayardan hesabıma nasıl girerim?</span>
+                                <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-1.5 leading-relaxed">
+                                Kayıt olurken belirlediğin <strong>benzersiz Kullanıcı Adı</strong> ve <strong>Şifre</strong> bulutta güvenle saklanır. Farklı bir cihazdan siteye girdiğinde giriş ekranındaki <strong>"Başka Cihazdan Giriş Yap"</strong> sekmesine kullanıcı adını ve şifreni yazarak bahçene kaldığın yerden devam edebilirsin.
+                            </p>
+                        </details>
+
+                        <details class="group rounded-xl bg-botanic-50/60 border border-botanic-100 p-2.5">
+                            <summary class="font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
+                                <span>3. Altın Nesil Tohumu (Sonsuzluk Döngüsü) nedir?</span>
+                                <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-1.5 leading-relaxed">
+                                Toplam 100 Trilyon (100 Tn) polen eşiğini geçtiğinde <strong>Evrimler</strong> sekmesinden bahçeni sıfırlayarak <strong>Altın Nesil Tohumu</strong> kazanabilirsin. Her bir tohum tüm üretimini kalıcı olarak +%10 güçlendirir.
+                            </p>
+                        </details>
+
+                        <details class="group rounded-xl bg-botanic-50/60 border border-botanic-100 p-2.5">
+                            <summary class="font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
+                                <span>4. Dükkandaki %10 indirim kodunu nasıl kullanabilirim?</span>
+                                <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-1.5 leading-relaxed">
+                                Üst veya alt menüdeki <strong>Çiçekçi Taha</strong> sekmesinde yer alan <strong>TAHA10</strong> kodunu kasada göstererek taze buket ve saksı bitkilerinde indirim avantajından yararlanabilirsin.
+                            </p>
+                        </details>
+                    </div>
+                </section>
+
+                <!-- Zorunlu Yasal Metinler ve Tercih Yönetimi Footer -->
+                <div class="bg-white/90 rounded-2xl p-4 border border-slate-200/80 text-center space-y-3">
+                    <div class="flex items-center justify-center gap-1.5 text-xs font-serif font-bold text-botanic-900">
+                        <i class="ph-fill ph-shield-check text-botanic-600 text-base"></i>
+                        <span>Çiçekçi Taha Yasal Bilgilendirme & Veri Güvenliği</span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-1.5 text-[11px] font-semibold">
+                        <button type="button" onclick="openLegalModal('kvkk')" class="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-botanic-50 text-slate-700 hover:text-botanic-800 border border-slate-200 transition">
+                            KVKK Aydınlatma Metni ve Açık Rıza
+                        </button>
+                        <button type="button" onclick="openLegalModal('cookies')" class="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-botanic-50 text-slate-700 hover:text-botanic-800 border border-slate-200 transition">
+                            Çerez Politikası
+                        </button>
+                        <button type="button" onclick="openCookiePrefsModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition">
+                            🍪 Çerez Tercih Yönetimi
+                        </button>
+                        <button type="button" onclick="openLegalModal('privacy')" class="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-botanic-50 text-slate-700 hover:text-botanic-800 border border-slate-200 transition">
+                            Gizlilik Politikası ve Kullanım Koşulları
+                        </button>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 leading-relaxed">
+                        © 2026 Çiçekçi Taha Botanik & Dijital Bahçe Deneyimi. Tüm hakları saklıdır. 6698 Sayılı KVKK kapsamında kullanıcı verileri yalnızca oyun kaydı ve sıralama amacıyla işlenir.
+                    </p>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- ALT NAVİGASYON ÇUBUĞU (Mobil Tek El Kullanımına Uygun) -->
+    <nav class="shrink-0 fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-botanic-100 px-2 py-1.5 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+        <div class="max-w-lg mx-auto grid grid-cols-4 gap-1">
+            <button onclick="switchTab('garden')" id="nav-garden" class="nav-btn active flex flex-col items-center justify-center py-1.5 rounded-xl text-botanic-700 bg-botanic-50 font-bold transition">
+                <i class="ph-fill ph-flower text-xl"></i>
+                <span class="text-[11px] mt-0.5">Bahçem</span>
+            </button>
+            <button onclick="switchTab('upgrades')" id="nav-upgrades" class="nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 hover:bg-slate-50 font-semibold transition">
+                <span id="upgradeReadyDot" class="hidden absolute top-1.5 right-5 w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                <i class="ph-fill ph-shopping-bag-open text-xl"></i>
+                <span class="text-[11px] mt-0.5">Mağaza</span>
+            </button>
+            <button onclick="switchTab('evolutions')" id="nav-evolutions" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 hover:bg-slate-50 font-semibold transition">
+                <i class="ph-fill ph-sparkle text-xl"></i>
+                <span class="text-[11px] mt-0.5">Evrimler</span>
+            </button>
+            <button onclick="switchTab('shopInfo')" id="nav-shopInfo" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 hover:bg-slate-50 font-semibold transition">
+                <i class="ph-fill ph-storefront text-xl"></i>
+                <span class="text-[11px] mt-0.5">Çiçekçi Taha</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ÇEREZ & KVKK ONAY BANNER'I -->
+    <div id="consentBanner" class="fixed bottom-16 inset-x-0 z-45 px-3 pb-2 pointer-events-none">
+        <div class="max-w-lg mx-auto bg-slate-900/95 text-white backdrop-blur-md rounded-2xl p-3.5 shadow-2xl border border-white/15 pointer-events-auto">
+            <div class="flex items-start gap-2.5">
+                <span class="text-xl shrink-0">🍪</span>
+                <div class="text-[11px] leading-relaxed text-slate-200">
+                    <strong class="text-white">Çerez ve KVKK Aydınlatması:</strong> Çiçekçi Taha deneyimini sunmak, çoklu cihaz oturumunuzu korumak ve sıralamayı çalıştırmak için çerezler ve bulut depolama kullanıyoruz. Detaylar için
+                    <button type="button" onclick="openLegalModal('kvkk')" class="underline text-amber-300 font-semibold">KVKK Aydınlatma Metni</button> ve
+                    <button type="button" onclick="openLegalModal('cookies')" class="underline text-amber-300 font-semibold">Çerez Politikası</button>'nı inceleyebilirsiniz.
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 mt-3">
+                <button type="button" onclick="acceptEssentialCookies()" class="py-2 px-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-bold text-[11px] transition">
+                    Sadece Zorunlular
+                </button>
+                <button type="button" onclick="openCookiePrefsModal()" class="py-2 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-bold text-[11px] transition">
+                    Tercihleri Yönet
+                </button>
+                <button type="button" onclick="acceptAllCookies()" class="py-2 px-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-[11px] shadow-md transition">
+                    Tümünü Kabul Et
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- YASAL METİNLER MODALI (KVKK, Çerez Politikası, Gizlilik & Kullanım Koşulları) -->
+    <div id="legalModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full max-h-[82dvh] flex flex-col shadow-2xl border border-botanic-100 overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-botanic-50/70">
+                <h3 id="legalModalTitle" class="font-serif font-bold text-base text-botanic-900">Yasal Bilgilendirme</h3>
+                <button type="button" onclick="closeLegalModal()" class="w-8 h-8 rounded-xl bg-white text-slate-600 border border-slate-200 flex items-center justify-center">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+            <div id="legalModalBody" class="p-5 overflow-y-auto text-xs text-slate-600 space-y-3 leading-relaxed">
+                <!-- JS ile yasal metin yüklenir -->
+            </div>
+            <div class="p-3.5 border-t border-slate-100 bg-slate-50 flex justify-end gap-2">
+                <button type="button" onclick="closeLegalModal()" class="px-5 py-2.5 rounded-xl bg-botanic-600 text-white font-bold text-xs shadow-sm active:scale-95 transition">
+                    Okudum, Anladım
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÇEREZ TERCİH YÖNETİMİ MODALI -->
+    <div id="cookiePrefsModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-botanic-100 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-lg text-botanic-900 flex items-center gap-1.5">
+                    <span>🍪</span>
+                    <span>Çerez & Gizlilik Tercihleri</span>
+                </h3>
+                <button type="button" onclick="closeCookiePrefsModal()" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 leading-relaxed">
+                Hangi çerez ve veri saklama kategorilerine izin verdiğinizi aşağıdan yönetebilirsiniz.
+            </p>
+
+            <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+                    <div>
+                        <div class="font-bold text-slate-800">Zorunlu Oturum & Güvenlik</div>
+                        <div class="text-[11px] text-slate-500">Hesap doğrulama ve bulut kayıt güvenliği için gereklidir.</div>
+                    </div>
+                    <span class="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-extrabold shrink-0">Her Zaman Aktif</span>
+                </div>
+
+                <label class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 cursor-pointer">
+                    <div>
+                        <div class="font-bold text-slate-800">İşlevsel Oyun & Cihaz Tercihleri</div>
+                        <div class="text-[11px] text-slate-500">Ses ayarları ve hızlı cihaz oturum hatırlama tercihi.</div>
+                    </div>
+                    <input id="prefFunctionalCheck" type="checkbox" checked class="w-4 h-4 accent-botanic-600 rounded">
+                </label>
+
+                <label class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 cursor-pointer">
+                    <div>
+                        <div class="font-bold text-slate-800">Performans & Sıralama İstatistikleri</div>
+                        <div class="text-[11px] text-slate-500">Dükkan bahçecileri liderlik tablosu ve oyun dengesi analizi.</div>
+                    </div>
+                    <input id="prefAnalyticsCheck" type="checkbox" checked class="w-4 h-4 accent-botanic-600 rounded">
+                </label>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onclick="saveCustomCookiePrefs()" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition">
+                    Seçimleri Kaydet
+                </button>
+                <button type="button" onclick="acceptAllCookies()" class="py-2.5 rounded-xl bg-botanic-600 hover:bg-botanic-700 text-white font-bold text-xs shadow-md transition">
+                    Tümünü Kabul Et
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÖZEL BİLDİRİM / TOAST MESAJ KUTUSU -->
+    <div id="toastNotification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2">
+        <div class="bg-slate-900/95 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 backdrop-blur-md border border-white/10">
+            <span id="toastMessage">Bildirim mesajı</span>
+        </div>
+    </div>
+
+    <!-- OFFLINE KAZANÇ MODALI -->
+    <div id="offlineModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-botanic-100">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mb-3">
+                🌞
+            </div>
+            <h3 class="font-serif text-xl font-extrabold text-botanic-900">Tekrar Hoş Geldin!</h3>
+            <p class="text-xs text-slate-600 mt-1.5">
+                Sen yokken arılar ve bahçıvanlar dükkanı boş bırakmadı, çiçeklerin büyümeye devam etti!
+            </p>
+            <div class="my-4 p-3 rounded-2xl bg-botanic-50 border border-botanic-200">
+                <div class="text-[11px] font-semibold text-botanic-700">Yokluğunda Toplanan Polen</div>
+                <div id="offlineEarnedAmount" class="font-serif text-2xl font-extrabold text-botanic-800 mt-0.5">+0</div>
+            </div>
+            <button onclick="closeOfflineModal()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-botanic-600 to-emerald-500 text-white font-bold text-sm shadow-lg shadow-botanic-500/25 active:scale-95 transition">
+                Harika, Topla! 🌿
+            </button>
+        </div>
+    </div>
+
+    <!-- ZORUNLU BENZERSİZ KAYIT & ÇOKLU CİHAZ GİRİŞ MODALI -->
+    <div id="authOverlayModal" class="fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border-2 border-botanic-200 my-auto">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-botanic-500 to-emerald-700 text-white flex items-center justify-center text-3xl shadow-lg shadow-botanic-500/25 mb-2.5">
+                    🌺
+                </div>
+                <h2 class="font-serif text-xl sm:text-2xl font-extrabold text-botanic-900">Çiçekçi Taha Bahçesi</h2>
+                <p class="text-xs text-slate-500 mt-1">
+                    Kendine özel benzersiz bir isim ve şifre belirle; dilediğin her cihazdan bahçene eriş!
+                </p>
+                <div id="authDbStatusBadge" class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
+                    <span>⏳ Bulut veritabanına bağlanılıyor...</span>
+                </div>
+            </div>
+
+            <!-- Kayıt / Başka Cihazdan Giriş Sekme Seçici -->
+            <div class="grid grid-cols-2 gap-1 bg-botanic-50 p-1 rounded-xl mt-4 border border-botanic-100">
+                <button type="button" id="authTabRegister" onclick="switchAuthMode('register')" class="py-2 rounded-lg text-xs font-extrabold bg-white text-botanic-900 shadow-sm transition">
+                    ✨ Yeni Kayıt Ol
+                </button>
+                <button type="button" id="authTabLogin" onclick="switchAuthMode('login')" class="py-2 rounded-lg text-xs font-bold text-botanic-700 transition">
+                    📱 Giriş Yap
+                </button>
+            </div>
+
+            <form onsubmit="submitAuthForm(event)" class="mt-4 space-y-3">
+                <!-- Avatar Seçici (Sadece Yeni Kayıtta Görünür) -->
+                <div id="authAvatarPickerGroup">
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Bahçeci Simgeni Seç:</label>
+                    <div class="grid grid-cols-6 gap-1.5">
+                        <button type="button" onclick="selectAuthAvatar('🌹')" data-avatar="🌹" class="avatar-opt py-2 rounded-xl text-xl bg-botanic-100 border-2 border-botanic-500 transition">🌹</button>
+                        <button type="button" onclick="selectAuthAvatar('🌻')" data-avatar="🌻" class="avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition">🌻</button>
+                        <button type="button" onclick="selectAuthAvatar('🌷')" data-avatar="🌷" class="avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition">🌷</button>
+                        <button type="button" onclick="selectAuthAvatar('🪷')" data-avatar="🪷" class="avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition">🪷</button>
+                        <button type="button" onclick="selectAuthAvatar('🌵')" data-avatar="🌵" class="avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition">🌵</button>
+                        <button type="button" onclick="selectAuthAvatar('🌸')" data-avatar="🌸" class="avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition">🌸</button>
+                    </div>
+                </div>
+
+                <!-- Benzersiz Kullanıcı Adı -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="authUsernameInput" class="block text-[11px] font-bold text-slate-600">Kullanıcı Adın (Benzersiz):</label>
+                        <span id="usernameUniqueHint" class="text-[10px] font-semibold text-botanic-600">Her isim 1 kez alınabilir</span>
+                    </div>
+                    <input id="authUsernameInput" type="text" minlength="2" maxlength="18" autocomplete="username" placeholder="Örn: taha_cicek, zeynep34..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-sm font-semibold text-slate-800 bg-slate-50/70" required>
+                </div>
+
+                <!-- Şifre / PIN Alanı -->
+                <div>
+                    <label for="authPinInput" class="block text-[11px] font-bold text-slate-600 mb-1">Şifren (En az 4 karakter/rakam):</label>
+                    <div class="relative">
+                        <input id="authPinInput" type="password" minlength="4" maxlength="16" autocomplete="current-password" placeholder="Örn: 1234 veya taha26" class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-sm font-bold tracking-wider text-slate-800 bg-slate-50/70" required>
+                        <button type="button" onclick="toggleAuthPasswordVisibility()" aria-label="Şifreyi Göster veya Gizle" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1">
+                            <i id="authEyeIcon" class="ph-bold ph-eye text-base"></i>
+                        </button>
+                    </div>
+                    <p id="authModeHelperText" class="text-[10px] text-slate-400 mt-1">Başka cihazdan girerken bu kullanıcı adı ve şifreyi yazman yeterli.</p>
+                </div>
+
+                <!-- KVKK & Kullanım Koşulları Açık Rıza Onayı (Kayıtta Zorunlu) -->
+                <div id="authKvkkGroup" class="flex items-start gap-2 pt-0.5">
+                    <input id="authKvkkCheck" type="checkbox" checked class="mt-0.5 w-4 h-4 accent-botanic-600 rounded shrink-0">
+                    <label for="authKvkkCheck" class="text-[10px] text-slate-500 leading-snug">
+                        <button type="button" onclick="openLegalModal('kvkk')" class="underline font-bold text-botanic-700">KVKK Aydınlatma Metni</button> ve
+                        <button type="button" onclick="openLegalModal('privacy')" class="underline font-bold text-botanic-700">Kullanım Koşulları</button>'nı okudum, hesabımın bulutta saklanmasına açık rıza veriyorum.
+                    </label>
+                </div>
+
+                <!-- Hata / Durum Mesajı -->
+                <div id="authErrorBox" class="hidden p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold"></div>
+
+                <button id="authSubmitBtn" type="submit" disabled class="w-full py-3 rounded-2xl bg-gradient-to-r from-botanic-600 to-emerald-500 text-white font-extrabold text-sm shadow-lg shadow-botanic-500/25 active:scale-95 transition disabled:opacity-50">
+                    Bağlanıyor...
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- KULLANICI PROFİLİ & ÇOKLU CİHAZ ERİŞİM MODALI -->
+    <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-botanic-100">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-serif font-bold text-lg text-botanic-900">Bahçeci Hesabım</h3>
+                <button onclick="closeProfileModal()" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+
+            <div class="bg-botanic-50/80 rounded-2xl p-3.5 border border-botanic-100 flex items-center gap-3">
+                <div id="profileModalAvatar" class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-3xl border border-botanic-200">
+                    🌹
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div id="profileModalName" class="font-serif font-extrabold text-base text-botanic-900 truncate">Bahçeci</div>
+                    <div class="text-[11px] font-semibold text-emerald-700 flex items-center gap-1 mt-0.5">
+                        <i class="ph-fill ph-cloud-check"></i>
+                        <span>Tüm Cihazlarla Senkronize</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Başka Cihazdan Giriş Bilgileri Kartı -->
+            <div class="mt-3 p-3 rounded-2xl bg-amber-50/75 border border-amber-200/80 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-extrabold text-amber-900">📱 Başka Cihazdan Giriş Bilgilerin</span>
+                    <button type="button" onclick="copyLoginCredentials()" class="px-2 py-1 rounded-lg bg-amber-500 text-white text-[10px] font-bold active:scale-95 transition">
+                        Bilgileri Kopyala
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white px-2.5 py-1.5 rounded-xl border border-amber-200/60">
+                        <div class="text-[9px] font-bold text-slate-400 uppercase">Kullanıcı Adı</div>
+                        <div id="profileCredUsername" class="font-bold text-slate-800 truncate">-</div>
+                    </div>
+                    <div class="bg-white px-2.5 py-1.5 rounded-xl border border-amber-200/60 flex items-center justify-between gap-1">
+                        <div class="min-w-0">
+                            <div class="text-[9px] font-bold text-slate-400 uppercase">Şifren</div>
+                            <div id="profileCredPin" class="font-mono font-bold text-slate-800 truncate">••••</div>
+                        </div>
+                        <button type="button" onclick="toggleProfilePinReveal()" class="text-slate-400 hover:text-slate-700 p-1 shrink-0">
+                            <i id="profilePinEyeIcon" class="ph-bold ph-eye text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase">Tam Kullanıcı Kimliği (ID)</div>
+                <div id="profileFullUserId" class="text-[11px] font-mono text-slate-700 break-all mt-0.5 select-all">-</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-2.5 text-center">
+                <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                    <div class="text-[10px] font-bold text-emerald-700">Toplam Tıklama</div>
+                    <div id="profileTotalClicks" class="text-sm font-extrabold text-emerald-900 mt-0.5">0</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-100">
+                    <div class="text-[10px] font-bold text-rose-700">Çiçek Aşaması</div>
+                    <div id="profileStageText" class="text-sm font-extrabold text-rose-900 mt-0.5">1 / 20</div>
+                </div>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-2">
+                <button onclick="closeProfileModal()" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+                    Kapat
+                </button>
+                <button onclick="logoutAccount()" class="py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold text-xs">
+                    Hesap Değiştir / Çıkış
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESTIGE (ALTIN NESİL TOHUMU) ONAY MODALI -->
+    <div id="prestigeModal" class="hidden fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-amber-200">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center text-3xl shadow-lg mb-3">
+                ✨
+            </div>
+            <h3 class="font-serif text-xl font-extrabold text-botanic-900">Yeni Nesil Tohumu Ek?</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                Mevcut polenin, çiçek aşaman ve yükseltmelerin sıfırlanacak; ancak kalıcı üretim çarpanın kalıcı olarak yükselecek!
+            </p>
+            <div class="my-4 p-3 rounded-2xl bg-amber-50 border border-amber-200">
+                <div class="text-[11px] font-semibold text-amber-800">Kazanılacak Kalıcı Bonus</div>
+                <div id="modalPrestigeGainText" class="font-serif text-xl font-extrabold text-orange-600 mt-0.5">+1 Tohum (+%10)</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="closePrestigeModal()" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+                    Vazgeç
+                </button>
+                <button onclick="confirmPrestige()" class="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-xs shadow-md active:scale-95 transition">
+                    Onayla & Ek 🌱
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OYUNU SIFIRLAMA ONAY MODALI -->
+    <div id="resetModal" class="hidden fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-rose-200">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mb-3">
+                ⚠️
+            </div>
+            <h3 class="font-serif text-lg font-extrabold text-slate-900">Bahçeni Sıfırlamak İstiyor Musun?</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                Bu işlem mevcut hesabındaki tüm polenleri, evrimleri ve Altın Nesil Tohumlarını en başa döndürür.
+            </p>
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+                    İptal
+                </button>
+                <button onclick="executeHardReset()" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md active:scale-95 transition">
+                    Evet, Sıfırla
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HARİCİ YAYIN (QR KOD) BULUT VERİTABANI BAĞLANTI MODALI -->
+    <div id="dbSetupModal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-botanic-200 space-y-3 my-auto">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-base sm:text-lg text-botanic-900 flex items-center gap-1.5">
+                    <span>☁️</span>
+                    <span>Canlı Site & Veritabanı Bağlantısı</span>
+                </h3>
+                <button type="button" onclick="closeDbSetupModal()" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+
+           
+
+            <div class="text-[11px] text-slate-600 space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                <div class="font-bold text-slate-800">2 Dakikada Ücretsiz Kurulum Adımları:</div>
+                <div>• <strong>console.firebase.google.com</strong> adresinden ücretsiz proje oluşturun.</div>
+                <div>• <strong>Authentication</strong> bölümünden <em>Anonymous (Anonim)</em> girişi aktif edin.</div>
+                <div>• <strong>Firestore Database</strong> oluşturun ve Web Uygulaması (<code>&lt;/&gt;</code>) ekleyip verilen <code>firebaseConfig</code> JSON bilgisini aşağıya yapıştırın.</div>
+            </div>
+
+            <div>
+                <label for="customDbConfigInput" class="block text-[11px] font-bold text-slate-700 mb-1">Firebase Yapılandırma JSON Kodu:</label>
+                <textarea id="customDbConfigInput" rows="4" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..."}' class="w-full p-2.5 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none font-mono text-[11px] text-slate-800 bg-slate-50"></textarea>
+            </div>
+
+            <div id="dbSetupErrorBox" class="hidden p-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-semibold"></div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onclick="closeDbSetupModal()" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+                    Kapat
+                </button>
+                <button type="button" onclick="applyCustomDbConfig()" class="py-2.5 rounded-xl bg-botanic-600 hover:bg-botanic-700 text-white font-extrabold text-xs shadow-md active:scale-95 transition">
+                    Bağlantıyı Test Et & Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        /**
+         * ÇİÇEKÇİ TAHA - HARDCORE SONSUZ BOTANİK CLICKER & BULUT HESAP MOTORU
+         * 20 Aşamalı Evrim Ağacı (10 Nonilyon Zirve), Zarif Sabit Sera Bahçesi, Benzersiz Kayıt & Çoklu Cihaz Girişi.
+         */
+
+        // --- 0. FIREBASE YAPILANDIRMASI ---
+        // cicekcitaha-ef404 Firebase projesi doğrudan bağlıdır:
+        const CUSTOM_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCQ5luIH3p7qe-lki3zM9rsTdwreR2tb3k",
+            authDomain: "cicekcitaha-ef404.firebaseapp.com",
+            projectId: "cicekcitaha-ef404",
+            storageBucket: "cicekcitaha-ef404.firebasestorage.app",
+            messagingSenderId: "856415164619",
+            appId: "1:856415164619:web:38cfeda12d7f6abc33234e",
+            measurementId: "G-VKZ1BXV6RM"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cicekci-taha-prod';
+        let firebaseConfig = CUSTOM_FIREBASE_CONFIG || (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null);
+        let app = null;
+        let auth = null;
+        let db = null;
+        let authReady = false;
+        let isCloudConnected = false;
+        let currentAccountKey = null;
+        let currentAccountMeta = { username: 'Misafir', avatar: '🌹', pin: '0000' };
+        let authMode = 'register';
+        let selectedAvatar = '🌹';
+        let memoryAccountsFallback = {};
+
+        // --- 1. SAYI FORMATLAMA YARDIMCISI (Nonilyon, Desilyon ve ötesi destekli) ---
+        const SUFFIXES = ["", "B", "Mn", "Mr", "Tn", "Kt", "Kn", "Sx", "Sp", "Ok", "No", "De", "Ud", "Dd", "Td"];
+        function formatNumber(num) {
+            if (!isFinite(num)) return "∞";
+            if (num < 1000) return Math.floor(num).toLocaleString('tr-TR');
+            const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
+            if (tier >= SUFFIXES.length) {
+                return num.toExponential(2).replace('+', '');
+            }
+            const suffix = SUFFIXES[tier];
+            const scale = Math.pow(10, tier * 3);
+            const scaled = num / scale;
+            return scaled.toFixed(scaled < 10 ? 2 : 1).replace('.', ',') + " " + suffix;
+        }
+
+        // --- 2. 20 AŞAMALI HARDCORE ÇİÇEK EVRİM AĞACI (10 Nonilyon / 1e31 Zirve) ---
+        const FLOWER_STAGES = [
+            { id: 0,  name: "Minik Yaşam Tohumu",          icon: "🌰", cost: 1000,   multiplier: 1,       auraColor: "bg-emerald-300/30", desc: "Taha'nın özenle toprağa bıraktığı ilk sihirli tohum. Sabırla filizlenmeyi bekliyor." },
+            { id: 1,  name: "Yeşil Bahar Filizi",          icon: "🌱", cost: 35000,  multiplier: 1.5,     auraColor: "bg-lime-300/40",    desc: "Toprağı delip ilk ışığı yakaladı! Temel polen verimi %50 arttı." },
+            { id: 2,  name: "Beyaz Kır Papatyası",         icon: "🌼", cost: 6.5e5,  multiplier: 2.5,     auraColor: "bg-yellow-200/45",  desc: "Dükkan vitrinine masumiyet ve neşe katan bembeyaz yapraklar (2.5x)." },
+            { id: 3,  name: "Sarı Bahar Nergisi",          icon: "🌻", cost: 1.5e7,  multiplier: 4.5,     auraColor: "bg-amber-300/45",   desc: "Mis kokusuyla tüm sokağı saran altın sarısı nergis demeti (4.5x)." },
+            { id: 4,  name: "Kırmızı Hollanda Lalesi",     icon: "🌷", cost: 4e8,    multiplier: 8.5,     auraColor: "bg-rose-300/45",    desc: "Zarif kadehiyle asaletin simgesi. Polen toplama hızı 8.5 katına çıktı!" },
+            { id: 5,  name: "Kokulu Mor Sümbül",           icon: "🪻", cost: 1.2e10, multiplier: 16,      auraColor: "bg-indigo-300/45",  desc: "Katman katman açılan büyüleyici kokusu arıları kendine çekiyor (16x)." },
+            { id: 6,  name: "Pembe Katmerli Şakayık",      icon: "🌸", cost: 3.5e11, multiplier: 32,      auraColor: "bg-pink-300/50",    desc: "Bolluk ve zarafetin çiçeği! Her dokunuşta yoğun polen bulutları saçar (32x)." },
+            { id: 7,  name: "Tutkulu Kadife Gül",          icon: "🌹", cost: 1.2e13, multiplier: 65,      auraColor: "bg-red-400/50",     desc: "Çiçekçi Taha'nın en özel imza çiçeği! Aşk ve bereket saçıyor (65x)." },
+            { id: 8,  name: "Dikenli Çöl Kaktüs Çiçeği",   icon: "🌵", cost: 4e14,   multiplier: 135,     auraColor: "bg-emerald-400/50", desc: "En zorlu koşullarda bile pes etmeyen dayanıklılık sembolü (135x)." },
+            { id: 9,  name: "Bahar Sakura Kiraz Çiçeği",   icon: "🍒", cost: 1.5e16, multiplier: 280,     auraColor: "bg-rose-200/60",    desc: "Rüzgarla savrulan pembe yapraklarıyla bahçeyi büyüleyen efsane (280x)." },
+            { id: 10, name: "Kutsal Göl Nilüferi",          icon: "🪷", cost: 6e17,   multiplier: 600,     auraColor: "bg-cyan-300/55",    desc: "Durgun suların üzerinde kusursuz saflıkla açan bilgelik çiçeği (600x)." },
+            { id: 11, name: "Etobur Venüs Sinekkapanı",    icon: "🪴", cost: 2.5e19, multiplier: 1300,    auraColor: "bg-lime-500/50",    desc: "Sıradan bitkilerin aksine aktif avlanarak enerji toplayan vahşi tür (1.300x)." },
+            { id: 12, name: "Egzotik Kraliyet Orkidesi",   icon: "🌺", cost: 1.1e21, multiplier: 2900,    auraColor: "bg-fuchsia-400/55", desc: "Nadir tropikal genetiğiyle botanik koleksiyoncularının rüyası (2.900x)." },
+            { id: 13, name: "Kadim Tapınak Bonsaisi",      icon: "🌳", cost: 5e22,   multiplier: 6500,    auraColor: "bg-teal-500/50",    desc: "Yüzyıllık sabır ve Taha'nın usta budamasıyla şekillenen canlı anıt (6.500x)." },
+            { id: 14, name: "Dev Orman Rafflesyası",       icon: "🏵️", cost: 2.5e24, multiplier: 15000,   auraColor: "bg-red-600/55",     desc: "Dünyanın en büyük tekil çiçeği! Devasa taç yapraklarıyla polen fırtınası yaratır (15.000x)." },
+            { id: 15, name: "Parlayan Gece Ay Çiçeği",      icon: "🌙", cost: 1.2e26, multiplier: 36000,   auraColor: "bg-indigo-400/60",  desc: "Ay ışığını emip karanlıkta gümüşi ışık saçan mistik gece mucizesi (36.000x)." },
+            { id: 16, name: "Biyolüminesans Kristal Eğrelti", icon: "💎", cost: 6e27, multiplier: 90000,   auraColor: "bg-sky-400/60",     desc: "Yaprakları saf elmas prizmalarından oluşan derin mağara harikası (90.000x)." },
+            { id: 17, name: "Altın Anka Lotusu",           icon: "🔥", cost: 3.5e29, multiplier: 240000,  auraColor: "bg-orange-500/60",  desc: "Küllerinden doğan alev yapraklarıyla polen üretimini alevlendirir (240.000x)." },
+            { id: 18, name: "Kadim Dünya Ağacı Filizi",    icon: "🌲", cost: 1e31,   multiplier: 650000,  auraColor: "bg-emerald-600/65", desc: "Kökleri zamanın başlangıcına uzanan efsanevi Yggdrasil fidanı (650.000x)." },
+            { id: 19, name: "Sonsuzluk & Kozmik Evren Çiçeği", icon: "🌌", cost: Infinity, multiplier: 2000000, auraColor: "bg-amber-300/75", desc: "10 Nonilyon taç yaprağıyla galaksilere hükmeden nihai botanik zirvesi! (2 Mn x)" }
+        ];
+
+        // 20 Aşama için Özel, Çok Katmanlı SVG Çiçek Üretici
+        function getFlowerSVG(stageIndex) {
+            const potThemes = [
+                ["#d97706", "#92400e"], ["#b45309", "#78350f"], ["#059669", "#047857"], ["#eab308", "#a16207"],
+                ["#e11d48", "#9f1239"], ["#4f46e5", "#3730a3"], ["#ec4899", "#be185d"], ["#dc2626", "#7f1d1d"],
+                ["#15803d", "#14532d"], ["#f472b6", "#9d174d"], ["#0891b2", "#164e63"], ["#4d7c0f", "#365314"],
+                ["#c026d3", "#86198f"], ["#0f766e", "#134e4a"], ["#991b1b", "#450a0a"], ["#312e81", "#1e1b4b"],
+                ["#0284c7", "#0c4a6e"], ["#ea580c", "#9a3412"], ["#065f46", "#022c22"], ["#fbbf24", "#b45309"]
+            ];
+            const [potLight, potDark] = potThemes[stageIndex] || potThemes[0];
+
+            const potSVG = `
+                <defs>
+                    <linearGradient id="potGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="${potLight}"/>
+                        <stop offset="100%" stop-color="${potDark}"/>
+                    </linearGradient>
+                    <radialGradient id="cosmicGlow" cx="50%" cy="45%" r="50%">
+                        <stop offset="0%" stop-color="#fef08a" stop-opacity="0.9"/>
+                        <stop offset="55%" stop-color="#f472b6" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#fef08a" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <ellipse cx="100" cy="186" rx="48" ry="8" fill="rgba(15, 23, 42, 0.16)"/>
+                <ellipse cx="100" cy="134" rx="38" ry="9" fill="#3f2e21"/>
+                <path d="M64 134 L72 180 Q74 185 80 185 L120 185 Q126 185 128 180 L136 134 Z" fill="url(#potGrad)"/>
+                <rect x="59" y="127" width="82" height="11" rx="5.5" fill="${potLight}"/>
+                <rect x="59" y="135" width="82" height="3" fill="rgba(0,0,0,0.18)"/>
+            `;
+
+            let plantSVG = "";
+            switch(stageIndex) {
+                case 0:
+                    plantSVG = `
+                        <path d="M90 133 Q100 110 110 133 Z" fill="#78350f"/>
+                        <circle cx="100" cy="126" r="8" fill="#a16207"/>
+                        <path d="M100 119 Q105 112 109 116" stroke="#4ade80" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    `;
+                    break;
+                case 1:
+                    plantSVG = `
+                        <path d="M100 133 Q98 104 100 88" stroke="#16a34a" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <path d="M100 105 Q76 90 73 106 Q87 116 100 105 Z" fill="#22c55e"/>
+                        <path d="M100 94 Q125 80 128 96 Q113 107 100 94 Z" fill="#4ade80"/>
+                    `;
+                    break;
+                case 2:
+                    plantSVG = `
+                        <path d="M100 133 Q96 95 100 66" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <path d="M100 110 Q76 100 72 112 Q86 120 100 110 Z" fill="#22c55e"/>
+                        <g transform="translate(100, 62)">
+                            ${Array.from({length:12},(_,i)=>i*30).map(a=>`<ellipse cx="0" cy="-18" rx="6" ry="13" fill="#fff" stroke="#e2e8f0" stroke-width="0.8" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="0" r="11" fill="#f59e0b"/>
+                        </g>
+                    `;
+                    break;
+                case 3:
+                    plantSVG = `
+                        <path d="M100 133 L100 68" stroke="#16a34a" stroke-width="5" fill="none"/>
+                        <path d="M100 126 Q75 88 83 74 Q94 98 100 126 Z" fill="#15803d"/>
+                        <path d="M100 126 Q125 88 117 74 Q106 98 100 126 Z" fill="#22c55e"/>
+                        <g transform="translate(100, 62)">
+                            ${[0,60,120,180,240,300].map(a=>`<ellipse cx="0" cy="-17" rx="8" ry="14" fill="#fef08a" stroke="#facc15" stroke-width="1" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="0" r="10" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
+                        </g>
+                    `;
+                    break;
+                case 4:
+                    plantSVG = `
+                        <path d="M100 133 L100 70" stroke="#15803d" stroke-width="5.5" fill="none"/>
+                        <path d="M100 128 Q70 94 82 76 Q95 100 100 128 Z" fill="#16a34a"/>
+                        <path d="M100 128 Q130 94 118 76 Q105 100 100 128 Z" fill="#22c55e"/>
+                        <path d="M81 54 C81 82, 119 82, 119 54 C119 40, 111 33, 106 43 L100 32 L94 43 C89 33, 81 40, 81 54 Z" fill="#e11d48"/>
+                        <path d="M90 54 C90 76, 110 76, 110 54 C110 44, 100 34, 100 34 C100 34, 90 44, 90 54 Z" fill="#fb7185"/>
+                    `;
+                    break;
+                case 5:
+                    plantSVG = `
+                        <path d="M100 133 L100 44" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <path d="M100 128 Q72 95 78 78 Q92 102 100 128 Z" fill="#16a34a"/>
+                        <path d="M100 128 Q128 95 122 78 Q108 102 100 128 Z" fill="#22c55e"/>
+                        ${[[100,42],[90,54],[110,54],[88,68],[112,68],[100,62],[92,80],[108,80],[100,76]].map(([x,y])=>
+                            `<circle cx="${x}" cy="${y}" r="9" fill="#6366f1" stroke="#a5b4fc" stroke-width="1.2"/>`
+                        ).join('')}
+                    `;
+                    break;
+                case 6:
+                    plantSVG = `
+                        <path d="M100 133 Q97 95 100 62" stroke="#15803d" stroke-width="5.5" fill="none"/>
+                        <path d="M100 108 L74 96 L82 114 Z" fill="#16a34a"/>
+                        <path d="M100 98 L126 86 L118 104 Z" fill="#22c55e"/>
+                        <g transform="translate(100, 56)">
+                            ${Array.from({length:10},(_,i)=>i*36).map(a=>`<circle cx="0" cy="-14" r="13" fill="#f472b6" transform="rotate(${a})"/>`).join('')}
+                            ${Array.from({length:8},(_,i)=>i*45).map(a=>`<circle cx="0" cy="-8" r="10" fill="#f9a8d4" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="0" r="8" fill="#fde047"/>
+                        </g>
+                    `;
+                    break;
+                case 7:
+                    plantSVG = `
+                        <path d="M100 133 Q103 95 100 64" stroke="#14532d" stroke-width="5.5" fill="none"/>
+                        <path d="M100 108 L76 96 L84 112 Z" fill="#15803d"/>
+                        <path d="M100 96 L124 84 L116 100 Z" fill="#16a34a"/>
+                        <g transform="translate(100, 54)">
+                            <circle cx="0" cy="0" r="25" fill="#9f1239"/>
+                            <path d="M-21 -5 C-23 -23, 23 -23, 21 -5 C23 17, -23 17, -21 -5 Z" fill="#e11d48"/>
+                            <path d="M-14 -4 C-15 -17, 15 -17, 14 -4 C15 11, -15 11, -14 -4 Z" fill="#f43f5e"/>
+                            <path d="M-6 -2 C-6 -9, 6 -9, 6 -2 C6 5, -6 5, -6 -2 Z" fill="#fda4af"/>
+                        </g>
+                    `;
+                    break;
+                case 8:
+                    plantSVG = `
+                        <rect x="86" y="70" width="28" height="64" rx="14" fill="#16a34a" stroke="#15803d" stroke-width="1.5"/>
+                        <path d="M86 105 Q68 105 68 88 Q68 78 76 78 Q82 78 82 90 L86 92" fill="#22c55e" stroke="#15803d" stroke-width="1.2"/>
+                        <path d="M114 96 Q132 96 132 80 Q132 70 124 70 Q118 70 118 82 L114 84" fill="#22c55e" stroke="#15803d" stroke-width="1.2"/>
+                        <g transform="translate(100, 64)">
+                            ${[-40,-20,0,20,40].map(a=>`<ellipse cx="0" cy="-10" rx="5" ry="12" fill="#f43f5e" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="-4" r="5" fill="#facc15"/>
+                        </g>
+                    `;
+                    break;
+                case 9:
+                    plantSVG = `
+                        <path d="M100 133 C92 108, 112 90, 98 62" stroke="#78350f" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        <path d="M98 92 L72 78" stroke="#78350f" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M102 80 L128 66" stroke="#78350f" stroke-width="4.5" stroke-linecap="round"/>
+                        ${[[70,76],[130,64],[100,52],[86,62],[114,58]].map(([x,y])=>`
+                            <g transform="translate(${x},${y})">
+                                <circle cx="0" cy="0" r="14" fill="#fbcfe8" opacity="0.95"/>
+                                <circle cx="0" cy="0" r="8" fill="#f472b6" opacity="0.7"/>
+                                <circle cx="0" cy="0" r="3" fill="#be185d"/>
+                            </g>
+                        `).join('')}
+                    `;
+                    break;
+                case 10:
+                    plantSVG = `
+                        <ellipse cx="100" cy="126" rx="44" ry="11" fill="#0d9488"/>
+                        <g transform="translate(100, 114)">
+                            ${[-55,-28,0,28,55].map(a=>`<path d="M0 10 Q-13 -16 0 -42 Q13 -16 0 10 Z" fill="#f9a8d4" stroke="#ec4899" stroke-width="0.9" transform="rotate(${a})"/>`).join('')}
+                            ${[-18,0,18].map(a=>`<path d="M0 8 Q-9 -12 0 -34 Q9 -12 0 8 Z" fill="#ffffff" stroke="#fbcfe8" stroke-width="0.8" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="-10" r="6" fill="#facc15"/>
+                        </g>
+                    `;
+                    break;
+                case 11:
+                    plantSVG = `
+                        <path d="M100 133 Q78 102 74 84" stroke="#65a30d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <path d="M100 133 Q122 102 126 84" stroke="#65a30d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <path d="M100 133 L100 72" stroke="#4d7c0f" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+                        ${[[74,80,-25],[126,80,25],[100,66,0]].map(([x,y,r])=>`
+                            <g transform="translate(${x},${y}) rotate(${r})">
+                                <path d="M-16 0 C-16 -16, 16 -16, 16 0 Z" fill="#84cc16" stroke="#365314" stroke-width="1.2"/>
+                                <path d="M-12 -2 C-12 -11, 12 -11, 12 -2 Z" fill="#e11d48"/>
+                                <path d="M-14 0 L-11 -5 L-7 0 L-3 -5 L0 0 L4 -5 L8 0 L12 -5 L15 0" stroke="#ecfccb" stroke-width="1.3" fill="none"/>
+                            </g>
+                        `).join('')}
+                    `;
+                    break;
+                case 12:
+                    plantSVG = `
+                        <path d="M100 133 Q88 90 105 40" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="82" cy="124" rx="19" ry="7" transform="rotate(-15 82 124)" fill="#16a34a"/>
+                        <ellipse cx="118" cy="124" rx="19" ry="7" transform="rotate(15 118 124)" fill="#22c55e"/>
+                        ${[[103,44,0.95],[92,66,0.85],[106,86,0.75]].map(([x,y,s])=>`
+                            <g transform="translate(${x},${y}) scale(${s})">
+                                <ellipse cx="0" cy="-14" rx="8" ry="12" fill="#e879f9"/>
+                                <ellipse cx="-14" cy="0" rx="12" ry="8" fill="#c026d3"/>
+                                <ellipse cx="14" cy="0" rx="12" ry="8" fill="#c026d3"/>
+                                <circle cx="0" cy="2" r="5" fill="#facc15"/>
+                            </g>
+                        `).join('')}
+                    `;
+                    break;
+                case 13:
+                    plantSVG = `
+                        <path d="M100 133 C90 114, 115 100, 96 80 C88 70, 104 60, 100 50" stroke="#78350f" stroke-width="9.5" fill="none" stroke-linecap="round"/>
+                        <path d="M98 94 L72 82" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M102 76 L128 66" stroke="#78350f" stroke-width="4.5" stroke-linecap="round"/>
+                        <ellipse cx="68" cy="78" rx="23" ry="11" fill="#15803d"/>
+                        <ellipse cx="130" cy="62" rx="23" ry="11" fill="#16a34a"/>
+                        <ellipse cx="100" cy="44" rx="32" ry="15" fill="#22c55e"/>
+                        <ellipse cx="100" cy="40" rx="22" ry="9" fill="#4ade80"/>
+                    `;
+                    break;
+                case 14:
+                    plantSVG = `
+                        <g transform="translate(100, 96)">
+                            ${[0,72,144,216,288].map(a=>`
+                                <path d="M0 0 C-24 -12, -26 -38, 0 -42 C26 -38, 24 -12, 0 0 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1.2" transform="rotate(${a})"/>
+                                <circle cx="0" cy="-24" r="2.5" fill="#fef2f2" opacity="0.85" transform="rotate(${a})"/>
+                                <circle cx="-6" cy="-18" r="2" fill="#fef2f2" opacity="0.85" transform="rotate(${a})"/>
+                                <circle cx="6" cy="-18" r="2" fill="#fef2f2" opacity="0.85" transform="rotate(${a})"/>
+                            `).join('')}
+                            <circle cx="0" cy="0" r="14" fill="#450a0a" stroke="#fca5a5" stroke-width="2"/>
+                        </g>
+                    `;
+                    break;
+                case 15:
+                    plantSVG = `
+                        <circle cx="100" cy="70" r="46" fill="url(#cosmicGlow)"/>
+                        <path d="M100 133 Q104 92 100 64" stroke="#312e81" stroke-width="6" fill="none"/>
+                        <g transform="translate(100, 58)">
+                            ${[0,45,90,135,180,225,270,315].map(a=>`<ellipse cx="0" cy="-20" rx="9" ry="18" fill="#e0e7ff" stroke="#818cf8" stroke-width="1.2" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="0" r="11" fill="#fde047"/>
+                        </g>
+                    `;
+                    break;
+                case 16:
+                    plantSVG = `
+                        <circle cx="100" cy="80" r="46" fill="url(#cosmicGlow)"/>
+                        <g transform="translate(100, 122)">
+                            ${[-50,-25,0,25,50].map(a=>`
+                                <polygon points="0,0 -7,-38 0,-64 7,-38" fill="rgba(56,189,248,0.85)" stroke="#e0f2fe" stroke-width="1.2" transform="rotate(${a})"/>
+                            `).join('')}
+                            <circle cx="0" cy="-12" r="9" fill="#ffffff"/>
+                        </g>
+                    `;
+                    break;
+                case 17:
+                    plantSVG = `
+                        <circle cx="100" cy="72" r="48" fill="url(#cosmicGlow)"/>
+                        <path d="M100 133 Q96 95 100 66" stroke="#9a3412" stroke-width="6" fill="none"/>
+                        <g transform="translate(100, 62)">
+                            ${[-45,-22,0,22,45].map(a=>`<path d="M0 14 Q-16 -16 0 -44 Q16 -16 0 14 Z" fill="#f97316" stroke="#fde047" stroke-width="1.2" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="-6" r="10" fill="#fef08a"/>
+                        </g>
+                    `;
+                    break;
+                case 18:
+                    plantSVG = `
+                        <circle cx="100" cy="64" r="54" fill="url(#cosmicGlow)"/>
+                        <path d="M100 133 C84 106, 116 88, 100 54" stroke="#78350f" stroke-width="11" fill="none" stroke-linecap="round"/>
+                        <path d="M98 92 L66 74" stroke="#78350f" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M102 82 L134 66" stroke="#78350f" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="64" cy="70" r="20" fill="#059669"/>
+                        <circle cx="136" cy="62" r="20" fill="#10b981"/>
+                        <circle cx="100" cy="46" r="30" fill="#34d399"/>
+                        <circle cx="100" cy="46" r="14" fill="#fef08a" opacity="0.85"/>
+                    `;
+                    break;
+                case 19:
+                default:
+                    plantSVG = `
+                        <circle cx="100" cy="64" r="62" fill="url(#cosmicGlow)"/>
+                        <path d="M100 133 C88 106, 112 88, 100 62" stroke="#f59e0b" stroke-width="9" fill="none" stroke-linecap="round"/>
+                        <g transform="translate(100, 56)">
+                            ${Array.from({length:16},(_,i)=>i*22.5).map(a=>`<polygon points="0,-42 7,-14 0,0 -7,-14" fill="#6366f1" stroke="#fde047" stroke-width="1" transform="rotate(${a})"/>`).join('')}
+                            ${Array.from({length:8},(_,i)=>i*45).map(a=>`<ellipse cx="0" cy="-22" rx="8" ry="18" fill="#ec4899" opacity="0.9" transform="rotate(${a})"/>`).join('')}
+                            <circle cx="0" cy="0" r="16" fill="#fbbf24" stroke="#ffffff" stroke-width="2"/>
+                            <text x="0" y="6" text-anchor="middle" font-size="16">👑</text>
+                        </g>
+                    `;
+                    break;
+            }
+
+            return `<svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">${plantSVG}${potSVG}</svg>`;
+        }
+
+        // --- 3. 12 KADEMELİ ZORLAŞTIRILMIŞ ÜRETİCİLER & YÜKSELTMELER ---
+        const UPGRADES_DATA = [
+            { id: 'wateringCan',        name: 'Bakır Sulama Kabı',        type: 'click', icon: '🚿', baseCost: 35,     costGrowth: 1.22, basePower: 1,       desc: 'Her dokunuşta toplanan temel poleni artırır.' },
+            { id: 'beeHive',            name: 'Çalışkan Arı Kovanı',      type: 'auto',  icon: '🐝', baseCost: 150,    costGrowth: 1.21, basePower: 3,       desc: 'Dükkan etrafında vızıldayarak saniyede otomatik polen toplar.' },
+            { id: 'sunSpray',           name: 'Güneş Işığı Spreyi',       type: 'click', icon: '☀️', baseCost: 2200,   costGrowth: 1.23, basePower: 22,      desc: 'Yapraklara yoğun güneş enerjisi yükler.' },
+            { id: 'butterflySwarm',     name: 'Renkli Kelebek Sürüsü',    type: 'auto',  icon: '🦋', baseCost: 14000,  costGrowth: 1.22, basePower: 110,     desc: 'Çiçekler arası tozlaşmayı hızlandıran zarif ekip.' },
+            { id: 'tahaFertilizer',     name: "Taha'nın Gizli Gübresi",   type: 'click', icon: '🧪', baseCost: 140000, costGrowth: 1.24, basePower: 800,     desc: 'Taha’nın özel organik formülü! Tık gücünü katlar.' },
+            { id: 'apprenticeGardener', name: 'Usta Bahçıvan Ekibi',      type: 'auto',  icon: '🧑‍🌾', baseCost: 1.2e6,  costGrowth: 1.23, basePower: 5500,    desc: 'Dükkandaki tüm saksıları 7/24 özenle budar ve sular.' },
+            { id: 'magicShears',        name: 'Sihirli Budama Makası',    type: 'click', icon: '✂️', baseCost: 1.2e7,  costGrowth: 1.25, basePower: 42000,   desc: 'Hem tık gücünü hem kritik patlama şansını yükseltir.' },
+            { id: 'smartGreenhouse',    name: 'Akıllı Cam Sera',          type: 'auto',  icon: '🏡', baseCost: 1.2e8,  costGrowth: 1.24, basePower: 320000,  desc: 'Otomatik nem ve iklim kontrolüyle kesintisiz üretim.' },
+            { id: 'botanicLab',         name: 'Botanik Genetik Labı',     type: 'auto',  icon: '🔬', baseCost: 1.8e9,  costGrowth: 1.25, basePower: 3.0e6,   desc: 'Nadir çiçek türlerinin DNA verimini optimize eder.' },
+            { id: 'climateDome',        name: 'Biyosfer İklim Kubbesi',   type: 'auto',  icon: '🌐', baseCost: 3.0e10, costGrowth: 1.26, basePower: 3.2e7,   desc: 'Dört mevsimi aynı anda simüle eden dev cam kubbe.' },
+            { id: 'timeGreenhouse',     name: 'Zaman Bükücü Sera',        type: 'auto',  icon: '⏳', baseCost: 5.5e11, costGrowth: 1.27, basePower: 3.6e8,   desc: 'İçerideki zaman akışını hızlandırarak saniyede asırlık hasat yapar.' },
+            { id: 'galacticReactor',    name: 'Galaktik Polen Reaktörü',  type: 'auto',  icon: '🛸', baseCost: 1.2e13, costGrowth: 1.28, basePower: 4.5e9,   desc: 'Yıldız tozunu saf kozmik polene dönüştüren nihai tesis.' }
+        ];
+
+        // --- 4. SİNERJİ & KİLOMETRE TAŞI ARAŞTIRMALARI ---
+        const RESEARCH_DATA = [
+            { id: 'res_click_cps_1', name: 'Polen Sinerjisi I',        icon: '⚡', cost: 50000,  reqText: '15 Arı Kovanı',         reqFn: s => (s.upgrades.beeHive || 0) >= 15,            desc: 'Saniyelik üretiminin (CPS) %5’i her tıklama gücüne eklenir!' },
+            { id: 'res_bee_3x',      name: 'Kraliçe Arı Feromonu',     icon: '👑', cost: 450000, reqText: '30 Arı Kovanı',         reqFn: s => (s.upgrades.beeHive || 0) >= 30,            desc: 'Çalışkan Arı Kovanı üretimini kalıcı olarak 3x artırır.' },
+            { id: 'res_click_2x',    name: 'Altın Parmak Tekniği',     icon: '👆', cost: 5e6,    reqText: '30 Bakır Sulama Kabı',  reqFn: s => (s.upgrades.wateringCan || 0) >= 30,        desc: 'Tüm tıklama gücü yükseltmelerini kalıcı olarak 2.5x artırır.' },
+            { id: 'res_crit_boost',  name: 'Kusursuz Budama Açısı',    icon: '🎯', cost: 3.5e7,  reqText: '20 Sihirli Makas',      reqFn: s => (s.upgrades.magicShears || 0) >= 20,        desc: 'Kritik tıklama çarpanını 3x yerine 5x seviyesine çıkarır!' },
+            { id: 'res_click_cps_2', name: 'Polen Sinerjisi II',       icon: '🔥', cost: 2.5e8,  reqText: '30 Kelebek Sürüsü',     reqFn: s => (s.upgrades.butterflySwarm || 0) >= 30,     desc: 'Saniyelik üretiminin (CPS) ekstra %10’u tıklama gücüne eklenir!' },
+            { id: 'res_gardener_3x', name: 'Usta Çırak Uyum Yasası',   icon: '🤝', cost: 3e9,    reqText: '30 Usta Bahçıvan',      reqFn: s => (s.upgrades.apprenticeGardener || 0) >= 30, desc: 'Usta Bahçıvan ve Akıllı Sera üretimini 3x katlar.' },
+            { id: 'res_ladybug_2x',  name: 'Uğur Böceği Mıknatısı',    icon: '🐞', cost: 2.5e10, reqText: 'Aşama 8 (Kadife Gül)',  reqFn: s => s.flowerStage >= 7,                           desc: 'Şanslı Uğur Böceği ödüllerini kalıcı olarak 2.5x artırır!' },
+            { id: 'res_global_2x',   name: "Taha'nın Ustalık Sırrı",   icon: '📜', cost: 2e11,   reqText: 'Aşama 10 (Sakura)',     reqFn: s => s.flowerStage >= 9,                           desc: 'Dükkanın tüm üretim ve tıklama gücünü kalıcı olarak 2x katlar!' },
+            { id: 'res_click_cps_3', name: 'Kozmik Dokunuş Sinerjisi', icon: '🌠', cost: 5e13,   reqText: '30 Botanik Labı',       reqFn: s => (s.upgrades.botanicLab || 0) >= 30,         desc: 'Saniyelik üretiminin (CPS) ekstra %20’si her dokunuşa eklenir!' },
+            { id: 'res_dome_4x',     name: 'Kuantum İklim Rezonansı',  icon: '🌐', cost: 1e16,   reqText: '30 İklim Kubbesi',      reqFn: s => (s.upgrades.climateDome || 0) >= 30,        desc: 'Biyosfer İklim Kubbesi ve Zaman Serası verimini 4x katlar!' },
+            { id: 'res_global_5x',   name: 'Galaktik Hasat Protokolü', icon: '🌌', cost: 5e18,   reqText: 'Aşama 14 (Bonsai)',     reqFn: s => s.flowerStage >= 13,                          desc: 'Tüm botanik imparatorluğunun verimini 5x çarpanla uçurur!' },
+            { id: 'res_global_10x',  name: 'Sonsuzluk Tohumu Yankısı',  icon: '♾️', cost: 1e24,   reqText: 'Aşama 17 (Kristal)',    reqFn: s => s.flowerStage >= 16,                          desc: '10 Nonilyon hedefine giden yolda tüm üretimi 10x katlar!' }
+        ];
+
+        // --- 5. OYUN DURUMU VE ÇALIŞMA DEĞİŞKENLERİ ---
+        let gameState = {
+            pollen: 0,
+            totalPollenEarned: 0,
+            totalClicks: 0,
+            flowerStage: 0,
+            prestigeSeeds: 0,
+            upgrades: {},
+            researches: {},
+            lastSaveTime: Date.now()
+        };
+
+        let soundEnabled = true;
+        let synth = null;
+        let currentTab = 'garden';
+        let currentShopFilter = 'all';
+        let buyMultiplier = 1;
+        let rainBuffActive = false;
+        let rainBuffRemaining = 0;
+        let rainCooldownRemaining = 0;
+        let ladybugTimeout = null;
+
+        // --- 6. WEB AUDIO (TONE.JS) SES EFEKTLERİ ---
+        function initAudio() {
+            if (!synth && typeof Tone !== 'undefined') {
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.2 }
+                }).toDestination();
+                synth.volume.value = -10;
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (!synth) return;
+                if (Tone.context.state !== 'running') Tone.start();
+                const now = Tone.now();
+                if (type === 'click') {
+                    const notes = ["C5", "E5", "G5", "A5", "C6"];
+                    const note = notes[Math.floor(Math.random() * notes.length)];
+                    synth.triggerAttackRelease(note, "32n", now);
+                } else if (type === 'crit') {
+                    synth.triggerAttackRelease(["E5", "G5", "C6"], "16n", now);
+                } else if (type === 'upgrade') {
+                    synth.triggerAttackRelease("D5", "16n", now);
+                    synth.triggerAttackRelease("A5", "16n", now + 0.07);
+                } else if (type === 'evolve') {
+                    synth.triggerAttackRelease("C5", "16n", now);
+                    synth.triggerAttackRelease("E5", "16n", now + 0.08);
+                    synth.triggerAttackRelease("G5", "16n", now + 0.16);
+                    synth.triggerAttackRelease("C6", "8n", now + 0.24);
+                }
+            } catch (e) {}
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            icon.className = soundEnabled ? 'ph-bold ph-speaker-high text-lg' : 'ph-bold ph-speaker-slash text-lg text-slate-400';
+            showToast(soundEnabled ? '🔊 Ses efektleri açıldı' : '🔇 Ses efektleri kapatıldı');
+        }
+
+        // --- 7. MATEMATİKSEL HESAPLAMALAR (MİLESTONE, SİNERJİ & PRESTIGE DAHİL) ---
+        function getBuildingMilestoneMultiplier(level) {
+            const milestones = Math.floor(level / 25);
+            return Math.pow(2, milestones);
+        }
+
+        function getGlobalMultiplier() {
+            const stageMult = FLOWER_STAGES[gameState.flowerStage]?.multiplier || 1;
+            const prestigeMult = 1 + ((gameState.prestigeSeeds || 0) * 0.10);
+            const rainMult = rainBuffActive ? 2 : 1;
+
+            let researchMult = 1;
+            if (gameState.researches['res_global_2x']) researchMult *= 2;
+            if (gameState.researches['res_global_5x']) researchMult *= 5;
+            if (gameState.researches['res_global_10x']) researchMult *= 10;
+
+            return stageMult * prestigeMult * rainMult * researchMult;
+        }
+
+        function getPollenPerSecond() {
+            let base = 0;
+            UPGRADES_DATA.filter(u => u.type === 'auto').forEach(u => {
+                const lvl = gameState.upgrades[u.id] || 0;
+                let itemPower = lvl * u.basePower * getBuildingMilestoneMultiplier(lvl);
+                if (u.id === 'beeHive' && gameState.researches['res_bee_3x']) itemPower *= 3;
+                if ((u.id === 'apprenticeGardener' || u.id === 'smartGreenhouse') && gameState.researches['res_gardener_3x']) itemPower *= 3;
+                if ((u.id === 'climateDome' || u.id === 'timeGreenhouse') && gameState.researches['res_dome_4x']) itemPower *= 4;
+                base += itemPower;
+            });
+            return base * getGlobalMultiplier();
+        }
+
+        function getClickPower() {
+            let base = 1;
+            UPGRADES_DATA.filter(u => u.type === 'click').forEach(u => {
+                const lvl = gameState.upgrades[u.id] || 0;
+                base += lvl * u.basePower * getBuildingMilestoneMultiplier(lvl);
+            });
+            if (gameState.researches['res_click_2x']) base *= 2.5;
+
+            let directClick = base * getGlobalMultiplier();
+
+            let cpsRatio = 0;
+            if (gameState.researches['res_click_cps_1']) cpsRatio += 0.05;
+            if (gameState.researches['res_click_cps_2']) cpsRatio += 0.10;
+            if (gameState.researches['res_click_cps_3']) cpsRatio += 0.20;
+
+            return directClick + (getPollenPerSecond() * cpsRatio);
+        }
+
+        function getUpgradeBulkCost(upgrade, count) {
+            const currentLvl = gameState.upgrades[upgrade.id] || 0;
+            if (count === 'max') {
+                let total = 0;
+                let bought = 0;
+                let tempLvl = currentLvl;
+                while (true) {
+                    const nextCost = Math.floor(upgrade.baseCost * Math.pow(upgrade.costGrowth, tempLvl));
+                    if (total + nextCost <= gameState.pollen && bought < 100) {
+                        total += nextCost;
+                        tempLvl++;
+                        bought++;
+                    } else {
+                        break;
+                    }
+                }
+                return { cost: bought > 0 ? total : Math.floor(upgrade.baseCost * Math.pow(upgrade.costGrowth, currentLvl)), count: Math.max(1, bought) };
+            } else {
+                let total = 0;
+                for (let i = 0; i < count; i++) {
+                    total += Math.floor(upgrade.baseCost * Math.pow(upgrade.costGrowth, currentLvl + i));
+                }
+                return { cost: total, count: count };
+            }
+        }
+
+        // --- 8. TIKLAMA VE PARÇACIK EFEKTLERİ ---
+        function handleFlowerClick(e) {
+            let clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : (e.clientX || window.innerWidth / 2);
+            let clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : (e.clientY || window.innerHeight / 2);
+
+            const shearsLvl = gameState.upgrades['magicShears'] || 0;
+            const critChance = Math.min(0.45, 0.08 + shearsLvl * 0.006);
+            const isCrit = Math.random() < critChance;
+            const critMult = gameState.researches['res_crit_boost'] ? 5 : 3;
+
+            let gained = getClickPower() * (isCrit ? critMult : 1);
+            gameState.pollen += gained;
+            gameState.totalPollenEarned += gained;
+            gameState.totalClicks++;
+
+            playSound(isCrit ? 'crit' : 'click');
+            spawnFloatingText(clientX, clientY, `+${formatNumber(gained)}`, isCrit);
+            spawnParticles(clientX, clientY, isCrit ? 8 : 4);
+            updateUI();
+        }
+
+        function spawnFloatingText(x, y, text, isCrit) {
+            const el = document.createElement('div');
+            el.className = `floating-number ${isCrit ? 'text-amber-500 text-xl' : 'text-botanic-700 text-base'}`;
+            el.style.left = `${x + (Math.random() * 24 - 12)}px`;
+            el.style.top = `${y - 10}px`;
+            el.textContent = isCrit ? `🌟 ${text}!` : text;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 950);
+        }
+
+        function spawnParticles(x, y, count) {
+            const emojis = ['🌸', '🍃', '✨', '🌼', '🌿'];
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'petal-particle text-sm';
+                p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                p.style.left = `${x}px`;
+                p.style.top = `${y}px`;
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 45 + Math.random() * 65;
+                p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                p.style.setProperty('--ty', `${Math.sin(angle) * dist - 30}px`);
+                p.style.setProperty('--rot', `${Math.random() * 360}deg`);
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 850);
+            }
+        }
+
+        // --- 9. ÇİÇEK EVRİMLEŞTİRME SİSTEMİ ---
+        function evolveFlower() {
+            const currentStage = FLOWER_STAGES[gameState.flowerStage];
+            if (!currentStage || gameState.flowerStage >= FLOWER_STAGES.length - 1) return;
+
+            if (gameState.pollen >= currentStage.cost) {
+                gameState.pollen -= currentStage.cost;
+                gameState.flowerStage++;
+                playSound('evolve');
+
+                const newStage = FLOWER_STAGES[gameState.flowerStage];
+                showToast(`🎉 Çiçeğin evrimleşti: ${newStage.name}!`);
+
+                const rect = document.getElementById('flowerClickTarget').getBoundingClientRect();
+                spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 16);
+
+                renderFlowerVisual();
+                renderEvolutionCatalog();
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function renderFlowerVisual() {
+            const stage = FLOWER_STAGES[gameState.flowerStage];
+            document.getElementById('flowerVisualContainer').innerHTML = getFlowerSVG(gameState.flowerStage);
+            document.getElementById('stageBadge').textContent = `Aşama ${gameState.flowerStage + 1}/${FLOWER_STAGES.length}`;
+            document.getElementById('flowerName').textContent = stage.name;
+            document.getElementById('flowerDesc').textContent = stage.desc;
+            document.getElementById('flowerPassiveTag').textContent = `${formatNumber(stage.multiplier)}x Çarpan`;
+
+            const aura = document.getElementById('flowerAura');
+            aura.className = `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full blur-2xl animate-aura pointer-events-none ${stage.auraColor}`;
+            renderGardenDecorations();
+        }
+
+        // --- 9B. SÜSLÜ BAHÇE DOSTLARI VE TEZGAH OBJELERİ ---
+        let lastDecorSignature = '';
+        function renderGardenDecorations() {
+            const bees = Math.min(3, Math.ceil((gameState.upgrades.beeHive || 0) / 10));
+            const butterflies = Math.min(3, Math.ceil((gameState.upgrades.butterflySwarm || 0) / 10));
+            const hasCan = (gameState.upgrades.wateringCan || 0) > 0;
+            const hasFert = (gameState.upgrades.tahaFertilizer || 0) > 0;
+            const hasGreenhouse = (gameState.upgrades.smartGreenhouse || 0) > 0 || gameState.flowerStage >= 3;
+            const hasDome = (gameState.upgrades.climateDome || 0) > 0 || (gameState.upgrades.botanicLab || 0) > 0;
+
+            const sig = `${bees}-${butterflies}-${hasCan}-${hasFert}-${hasGreenhouse}-${hasDome}`;
+            if (sig === lastDecorSignature) return;
+            lastDecorSignature = sig;
+
+            const companionsEl = document.getElementById('gardenCompanionsLayer');
+            if (companionsEl) {
+                let compHTML = '';
+                const beePositions = [
+                    'top-[24%] left-[15%] companion-float-left',
+                    'top-[38%] right-[16%] companion-float-right',
+                    'top-[56%] left-[19%] companion-float-left'
+                ];
+                for (let i = 0; i < bees; i++) {
+                    compHTML += `<div class="absolute ${beePositions[i]} text-lg sm:text-xl drop-shadow" style="animation-delay:${i * 0.7}s">🐝</div>`;
+                }
+                const bfPositions = [
+                    'top-[20%] right-[20%] companion-float-right',
+                    'top-[48%] right-[13%] companion-float-left',
+                    'top-[32%] left-[12%] companion-float-right'
+                ];
+                for (let i = 0; i < butterflies; i++) {
+                    compHTML += `<div class="absolute ${bfPositions[i]} text-lg sm:text-xl drop-shadow" style="animation-delay:${i * 0.9}s">🦋</div>`;
+                }
+                companionsEl.innerHTML = compHTML;
+            }
+
+            const leftShelf = document.getElementById('shelfLeftProps');
+            if (leftShelf) {
+                leftShelf.innerHTML = `${hasCan ? '<span>🚿</span>' : ''}${hasFert ? '<span>🧪</span>' : ''}`;
+            }
+            const rightShelf = document.getElementById('shelfRightProps');
+            if (rightShelf) {
+                rightShelf.innerHTML = `${hasGreenhouse ? '<span>🏮</span>' : ''}${hasDome ? '<span>🔮</span>' : ''}`;
+            }
+        }
+
+        // --- 10. YÜKSELTME & AR-GE SATIN ALMA ---
+        function buyUpgrade(upgradeId) {
+            const upgrade = UPGRADES_DATA.find(u => u.id === upgradeId);
+            if (!upgrade) return;
+
+            const { cost, count } = getUpgradeBulkCost(upgrade, buyMultiplier);
+            if (gameState.pollen >= cost) {
+                gameState.pollen -= cost;
+                gameState.upgrades[upgradeId] = (gameState.upgrades[upgradeId] || 0) + count;
+                playSound('upgrade');
+                renderGardenDecorations();
+                renderUpgradesList();
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function buyResearch(resId) {
+            const res = RESEARCH_DATA.find(r => r.id === resId);
+            if (!res || gameState.researches[resId]) return;
+            if (!res.reqFn(gameState) || gameState.pollen < res.cost) return;
+
+            gameState.pollen -= res.cost;
+            gameState.researches[resId] = true;
+            playSound('evolve');
+            showToast(`🔬 Araştırma Tamamlandı: ${res.name}!`);
+            renderUpgradesList();
+            updateUI();
+            saveGame();
+        }
+
+        function filterShop(type) {
+            currentShopFilter = type;
+            document.querySelectorAll('.shop-filter-btn').forEach(btn => {
+                btn.className = 'shop-filter-btn relative flex-1 py-1.5 text-xs font-bold rounded-lg text-botanic-700 hover:text-botanic-900 transition';
+            });
+            document.getElementById(`filter-${type}`).className = 'shop-filter-btn relative flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-botanic-900 shadow-sm transition';
+            document.getElementById('bulkBuyBar').style.display = type === 'research' ? 'none' : 'flex';
+            renderUpgradesList();
+        }
+
+        function setBuyMultiplier(mult) {
+            buyMultiplier = mult;
+            document.querySelectorAll('.mult-btn').forEach(btn => {
+                btn.className = 'mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700';
+            });
+            document.getElementById(`mult-${mult}`).className = 'mult-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-botanic-600 text-white';
+            renderUpgradesList();
+        }
+
+        function renderUpgradesList() {
+            const container = document.getElementById('upgradesList');
+
+            if (currentShopFilter === 'research') {
+                container.innerHTML = RESEARCH_DATA.map(r => {
+                    const bought = !!gameState.researches[r.id];
+                    const unlocked = r.reqFn(gameState);
+                    const canAfford = !bought && unlocked && gameState.pollen >= r.cost;
+
+                    return `
+                        <div class="bg-white rounded-2xl p-3 border ${bought ? 'border-emerald-300 bg-emerald-50/40' : canAfford ? 'border-amber-300 shadow-sm' : 'border-slate-100 opacity-85'} flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-12 h-12 shrink-0 rounded-2xl ${bought ? 'bg-emerald-100 border-emerald-300' : 'bg-indigo-50 border-indigo-200'} border flex items-center justify-center text-2xl">
+                                    ${r.icon}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <h4 class="font-bold text-sm text-slate-800 truncate">${r.name}</h4>
+                                        ${bought ? '<span class="px-1.5 py-0.5 rounded bg-emerald-600 text-white text-[9px] font-bold">Aktif</span>' : `<span class="px-1.5 py-0.5 rounded ${unlocked ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'} text-[9px] font-bold">Şart: ${r.reqText}</span>`}
+                                    </div>
+                                    <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">${r.desc}</p>
+                                </div>
+                            </div>
+                            ${bought ? `
+                                <span class="shrink-0 px-3 py-2 rounded-xl bg-emerald-100 text-emerald-700 font-extrabold text-xs">Tamam</span>
+                            ` : `
+                                <button onclick="buyResearch('${r.id}')" ${!canAfford ? 'disabled' : ''} class="shrink-0 px-3 py-2.5 rounded-xl font-bold text-xs flex flex-col items-center min-w-[84px] transition active:scale-95 ${canAfford ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}">
+                                    <span>${unlocked ? 'Araştır' : 'Kilitli'}</span>
+                                    <span class="text-[11px] font-extrabold mt-0.5">${formatNumber(r.cost)}</span>
+                                </button>
+                            `}
+                        </div>
+                    `;
+                }).join('');
+                return;
+            }
+
+            const filtered = UPGRADES_DATA.filter(u => currentShopFilter === 'all' || u.type === currentShopFilter);
+            container.innerHTML = filtered.map(u => {
+                const lvl = gameState.upgrades[u.id] || 0;
+                const { cost, count } = getUpgradeBulkCost(u, buyMultiplier);
+                const canAfford = gameState.pollen >= cost;
+                const milestoneMult = getBuildingMilestoneMultiplier(lvl);
+                const nextMilestone = (Math.floor(lvl / 25) + 1) * 25;
+
+                let mult = getGlobalMultiplier() * milestoneMult;
+                if (u.type === 'click' && gameState.researches['res_click_2x']) mult *= 2.5;
+                if (u.id === 'beeHive' && gameState.researches['res_bee_3x']) mult *= 3;
+                if ((u.id === 'apprenticeGardener' || u.id === 'smartGreenhouse') && gameState.researches['res_gardener_3x']) mult *= 3;
+                if ((u.id === 'climateDome' || u.id === 'timeGreenhouse') && gameState.researches['res_dome_4x']) mult *= 4;
+
+                const powerGain = u.basePower * count * mult;
+
+                return `
+                    <div class="bg-white rounded-2xl p-3 border ${canAfford ? 'border-botanic-300 shadow-sm' : 'border-slate-100 opacity-85'} flex items-center justify-between gap-3 transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-12 h-12 shrink-0 rounded-2xl ${u.type === 'click' ? 'bg-amber-50 border-amber-200' : 'bg-botanic-50 border-botanic-200'} border flex items-center justify-center text-2xl relative">
+                                ${u.icon}
+                                ${milestoneMult > 1 ? `<span class="absolute -top-1.5 -right-1.5 px-1 bg-amber-500 text-white text-[9px] font-extrabold rounded-md shadow-sm">${milestoneMult}x</span>` : ''}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="font-bold text-sm text-slate-800 truncate">${u.name}</h4>
+                                    <span class="shrink-0 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-extrabold">Sv. ${lvl}/${nextMilestone}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">${u.desc}</p>
+                                <div class="text-[11px] font-bold ${u.type === 'click' ? 'text-amber-600' : 'text-botanic-600'} mt-0.5">
+                                    +${formatNumber(powerGain)} ${u.type === 'click' ? 'Tık Gücü' : 'Polen/sn'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="buyUpgrade('${u.id}')" ${!canAfford ? 'disabled' : ''} class="shrink-0 px-3 py-2.5 rounded-xl font-bold text-xs flex flex-col items-center min-w-[84px] transition active:scale-95 ${canAfford ? 'bg-gradient-to-r from-botanic-600 to-emerald-500 text-white shadow-md shadow-botanic-500/20' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}">
+                            <span>Al (${count}x)</span>
+                            <span class="text-[11px] font-extrabold mt-0.5">${formatNumber(cost)}</span>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- 11. AKTİF YETENEK: BEREKET YAĞMURU & ALTIN UĞUR BÖCEĞİ ---
+        function triggerRainSkill() {
+            if (rainBuffActive || rainCooldownRemaining > 0) return;
+
+            rainBuffActive = true;
+            rainBuffRemaining = 15;
+            rainCooldownRemaining = 45;
+
+            document.getElementById('rainContainer').classList.remove('hidden');
+            document.getElementById('activeBuffBanner').classList.remove('hidden');
+            createRainDrops();
+            playSound('evolve');
+            showToast('🌧️ Bereket Yağmuru başladı! 15 sn boyunca 2x üretim!');
+            updateUI();
+        }
+
+        function createRainDrops() {
+            const container = document.getElementById('rainContainer');
+            container.innerHTML = '';
+            for (let i = 0; i < 24; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-streak';
+                drop.style.left = `${Math.random() * 100}%`;
+                drop.style.animationDelay = `${Math.random() * 0.8}s`;
+                container.appendChild(drop);
+            }
+        }
+
+        function scheduleLadybug() {
+            const delay = 25000 + Math.random() * 30000;
+            ladybugTimeout = setTimeout(() => {
+                const bug = document.getElementById('goldenLadybug');
+                bug.style.top = `${18 + Math.random() * 55}%`;
+                bug.style.left = `${15 + Math.random() * 65}%`;
+                bug.classList.remove('hidden');
+
+                setTimeout(() => {
+                    bug.classList.add('hidden');
+                    scheduleLadybug();
+                }, 9000);
+            }, delay);
+        }
+
+        function claimLadybug(e) {
+            e.stopPropagation();
+            const bug = document.getElementById('goldenLadybug');
+            bug.classList.add('hidden');
+
+            const mult = gameState.researches['res_ladybug_2x'] ? 2.5 : 1;
+            const reward = Math.max(getPollenPerSecond() * 20, getClickPower() * 30, 250) * mult;
+            gameState.pollen += reward;
+            gameState.totalPollenEarned += reward;
+
+            playSound('evolve');
+            spawnFloatingText(e.clientX || 180, e.clientY || 250, `🐞 +${formatNumber(reward)}`, true);
+            showToast(`🐞 Şanslı Uğur Böceği! +${formatNumber(reward)} Polen kazandın!`);
+            updateUI();
+        }
+
+        // --- 12. SONSUZLUK (PRESTIGE) VE EVRİM KATALOĞU ---
+        function calculatePendingPrestige() {
+            if (gameState.totalPollenEarned < 1e14) return 0;
+            const totalPotentialSeeds = Math.floor(Math.cbrt(gameState.totalPollenEarned / 1e14));
+            return Math.max(0, totalPotentialSeeds - (gameState.prestigeSeeds || 0));
+        }
+
+        function openPrestigeModal() {
+            const gain = calculatePendingPrestige();
+            if (gain <= 0) return;
+            document.getElementById('modalPrestigeGainText').textContent = `+${formatNumber(gain)} Tohum (+%${formatNumber(gain * 10)})`;
+            document.getElementById('prestigeModal').classList.remove('hidden');
+        }
+
+        function closePrestigeModal() {
+            document.getElementById('prestigeModal').classList.add('hidden');
+        }
+
+        function confirmPrestige() {
+            const gain = calculatePendingPrestige();
+            if (gain <= 0) return;
+
+            gameState.prestigeSeeds = (gameState.prestigeSeeds || 0) + gain;
+            gameState.pollen = 0;
+            gameState.flowerStage = 0;
+            UPGRADES_DATA.forEach(u => gameState.upgrades[u.id] = 0);
+            RESEARCH_DATA.forEach(r => gameState.researches[r.id] = false);
+
+            closePrestigeModal();
+            playSound('evolve');
+            showToast(`✨ +${formatNumber(gain)} Altın Nesil Tohumu ekildi! Toplam Bonus: +%${formatNumber(gameState.prestigeSeeds * 10)}`);
+            renderFlowerVisual();
+            renderEvolutionCatalog();
+            renderUpgradesList();
+            updateUI();
+            saveGame();
+        }
+
+        function renderEvolutionCatalog() {
+            const list = document.getElementById('evolutionCatalogList');
+            document.getElementById('catalogProgressText').textContent = `${gameState.flowerStage + 1} / ${FLOWER_STAGES.length} Açıldı`;
+            list.innerHTML = FLOWER_STAGES.map((stage, idx) => {
+                const unlocked = idx <= gameState.flowerStage;
+                const isCurrent = idx === gameState.flowerStage;
+                return `
+                    <div class="p-3 rounded-2xl border flex items-center justify-between ${isCurrent ? 'bg-botanic-50 border-botanic-400 shadow-sm' : unlocked ? 'bg-white border-botanic-100' : 'bg-slate-50 border-slate-100 opacity-65'}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl ${unlocked ? 'bg-white shadow-sm' : 'bg-slate-200'} flex items-center justify-center text-2xl">
+                                ${unlocked ? stage.icon : '🔒'}
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="font-bold text-sm text-slate-800">${idx + 1}. ${unlocked ? stage.name : 'Gizli Botanik Türü'}</span>
+                                    ${isCurrent ? '<span class="px-1.5 py-0.5 text-[10px] font-bold bg-botanic-600 text-white rounded">Aktif</span>' : ''}
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">
+                                    ${unlocked ? stage.desc : 'Bu çiçeği keşfetmek için bahçeni büyüt.'}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="shrink-0 text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200">
+                            ${formatNumber(stage.multiplier)}x
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- 13. ARAYÜZ GÜNCELLEME & SEKME YÖNETİMİ ---
+        function updateUI() {
+            document.getElementById('pollenDisplay').textContent = formatNumber(gameState.pollen);
+            document.getElementById('cpcDisplay').textContent = `+${formatNumber(getClickPower())}`;
+            document.getElementById('cpsDisplay').textContent = `${formatNumber(getPollenPerSecond())}/sn`;
+
+            const seeds = gameState.prestigeSeeds || 0;
+            if (seeds > 0) {
+                document.getElementById('prestigeBadge').classList.remove('hidden');
+                document.getElementById('prestigeLevelText').textContent = formatNumber(seeds);
+            }
+            document.getElementById('currentPrestigeBonus').textContent = formatNumber(seeds * 10);
+            const pendingGain = calculatePendingPrestige();
+            document.getElementById('pendingPrestigeGain').textContent = `+${formatNumber(pendingGain)} Tohum`;
+            document.getElementById('prestigeBtn').disabled = pendingGain <= 0;
+
+            const stage = FLOWER_STAGES[gameState.flowerStage];
+            const evolveBtn = document.getElementById('evolveBtn');
+            if (gameState.flowerStage >= FLOWER_STAGES.length - 1) {
+                document.getElementById('nextEvoLabel').textContent = '20/20 Kozmik Evren Zirvesine Ulaşıldı!';
+                document.getElementById('nextEvoCostText').textContent = '👑 10 No Zirve';
+                document.getElementById('evoProgressBar').style.width = '100%';
+                evolveBtn.disabled = true;
+                evolveBtn.className = 'col-span-8 py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-between bg-amber-100 text-amber-800 border border-amber-300';
+                document.getElementById('evolveBtnIcon').textContent = '🌌';
+                document.getElementById('evolveBtnTitle').textContent = 'Kozmik Evren Çiçeği';
+                document.getElementById('evolveBtnSub').textContent = 'Evrimler sekmesinden Nesil atla!';
+            } else {
+                const nextStage = FLOWER_STAGES[gameState.flowerStage + 1];
+                const pct = Math.min(100, (gameState.pollen / stage.cost) * 100);
+                document.getElementById('nextEvoLabel').textContent = `Sonraki (${gameState.flowerStage + 2}/20): ${nextStage.name}`;
+                document.getElementById('nextEvoCostText').textContent = `${formatNumber(gameState.pollen)} / ${formatNumber(stage.cost)}`;
+                document.getElementById('evoProgressBar').style.width = `${pct}%`;
+
+                const canEvolve = gameState.pollen >= stage.cost;
+                evolveBtn.disabled = !canEvolve;
+                document.getElementById('evolveBtnIcon').textContent = nextStage.icon;
+                document.getElementById('evolveBtnTitle').textContent = canEvolve ? `Evrimleş: ${nextStage.name}` : 'Çiçeği Evrimleştir';
+                document.getElementById('evolveBtnSub').textContent = `${formatNumber(stage.cost)} Polen Gerekli`;
+                evolveBtn.className = canEvolve
+                    ? 'col-span-8 py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-between bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-lg shadow-rose-500/25 transition active:scale-95'
+                    : 'col-span-8 py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-between bg-slate-200 text-slate-500 transition';
+            }
+
+            const rainBtn = document.getElementById('rainSkillBtn');
+            const rainText = document.getElementById('rainCooldownText');
+            if (rainBuffActive) {
+                rainBtn.disabled = true;
+                rainText.textContent = `Aktif (${rainBuffRemaining}s)`;
+                document.getElementById('buffTimerText').textContent = `Bereket Yağmuru: ${rainBuffRemaining}s (2x)`;
+            } else if (rainCooldownRemaining > 0) {
+                rainBtn.disabled = true;
+                rainText.textContent = `Bekle (${rainCooldownRemaining}s)`;
+            } else {
+                rainBtn.disabled = false;
+                rainText.textContent = `Hazır (2x)`;
+            }
+
+            const anyResearchReady = RESEARCH_DATA.some(r => !gameState.researches[r.id] && r.reqFn(gameState) && gameState.pollen >= r.cost);
+            const resDot = document.getElementById('researchReadyDot');
+            if (resDot) {
+                resDot.classList.toggle('hidden', !anyResearchReady);
+            }
+
+            const anyAffordable = anyResearchReady || UPGRADES_DATA.some(u => gameState.pollen >= getUpgradeBulkCost(u, 1).cost);
+            const dot = document.getElementById('upgradeReadyDot');
+            if (anyAffordable && currentTab !== 'upgrades') {
+                dot.classList.remove('hidden');
+            } else {
+                dot.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-500 hover:bg-slate-50 font-semibold transition';
+            });
+            document.getElementById(`nav-${tabName}`).className = 'nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-botanic-700 bg-botanic-50 font-bold transition';
+
+            if (tabName === 'upgrades') renderUpgradesList();
+            if (tabName === 'evolutions') renderEvolutionCatalog();
+            updateUI();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('opacity-0', '-translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-2');
+            }, 2800);
+        }
+
+        function copyPromoCode() {
+            const code = document.getElementById('promoCodeText').textContent.trim();
+            const tempInput = document.createElement('input');
+            tempInput.value = code;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('🎁 İndirim kodu kopyalandı: ' + code);
+        }
+
+        // --- 14. KOLAY HESAP KAYIT SİSTEMİ & FIRESTORE BULUT KAYDI ---
+        function normalizeUsername(raw) {
+            return (raw || '').trim().toLowerCase()
+                .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                .replace(/[^a-z0-9_]/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_|_$/g, '');
+        }
+
+        function switchAuthMode(mode) {
+            authMode = mode;
+            const regBtn = document.getElementById('authTabRegister');
+            const logBtn = document.getElementById('authTabLogin');
+            const avatarGroup = document.getElementById('authAvatarPickerGroup');
+            const kvkkGroup = document.getElementById('authKvkkGroup');
+            const uniqueHint = document.getElementById('usernameUniqueHint');
+            const helperText = document.getElementById('authModeHelperText');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const errBox = document.getElementById('authErrorBox');
+            errBox.classList.add('hidden');
+
+            if (mode === 'register') {
+                regBtn.className = 'py-2 rounded-lg text-xs font-extrabold bg-white text-botanic-900 shadow-sm transition';
+                logBtn.className = 'py-2 rounded-lg text-xs font-bold text-botanic-700 transition';
+                avatarGroup.classList.remove('hidden');
+                kvkkGroup.classList.remove('hidden');
+                uniqueHint.textContent = 'Her isim 1 kez alınabilir';
+                helperText.textContent = 'Başka cihazdan girerken bu kullanıcı adı ve şifreyi yazman yeterli.';
+                if (authReady) submitBtn.textContent = '✨ Kaydı Tamamla & Bahçeye Gir';
+            } else {
+                logBtn.className = 'py-2 rounded-lg text-xs font-extrabold bg-white text-botanic-900 shadow-sm transition';
+                regBtn.className = 'py-2 rounded-lg text-xs font-bold text-botanic-700 transition';
+                avatarGroup.classList.add('hidden');
+                kvkkGroup.classList.add('hidden');
+                uniqueHint.textContent = 'Kayıtlı hesabına bağlan';
+                helperText.textContent = 'Başka telefon veya bilgisayarda açtığın hesabın kullanıcı adı ve şifresini gir.';
+                if (authReady) submitBtn.textContent = '📱 Bahçeme Giriş Yap';
+            }
+        }
+
+        function toggleAuthPasswordVisibility() {
+            const input = document.getElementById('authPinInput');
+            const icon = document.getElementById('authEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'ph-bold ph-eye-slash text-base';
+            } else {
+                input.type = 'password';
+                icon.className = 'ph-bold ph-eye text-base';
+            }
+        }
+
+        function selectAuthAvatar(emoji) {
+            selectedAvatar = emoji;
+            document.querySelectorAll('.avatar-opt').forEach(btn => {
+                if (btn.dataset.avatar === emoji) {
+                    btn.className = 'avatar-opt py-2 rounded-xl text-xl bg-botanic-100 border-2 border-botanic-500 transition scale-105';
+                } else {
+                    btn.className = 'avatar-opt py-2 rounded-xl text-xl bg-slate-50 border border-slate-200 transition';
+                }
+            });
+        }
+
+        function showAuthError(msg) {
+            const box = document.getElementById('authErrorBox');
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        function applyAccountDataToGame(accountData, key) {
+            currentAccountKey = key;
+            currentAccountMeta = {
+                username: accountData.username || key,
+                avatar: accountData.avatar || '🌹',
+                pin: accountData.pin || '0000'
+            };
+
+            gameState = {
+                pollen: Number(accountData.pollen) || 0,
+                totalPollenEarned: Number(accountData.totalPollenEarned) || 0,
+                totalClicks: Number(accountData.totalClicks) || 0,
+                flowerStage: Number(accountData.flowerStage) || 0,
+                prestigeSeeds: Number(accountData.prestigeSeeds) || 0,
+                upgrades: accountData.upgrades || {},
+                researches: accountData.researches || {},
+                lastSaveTime: Number(accountData.lastSaveTime) || Date.now()
+            };
+
+            UPGRADES_DATA.forEach(u => {
+                if (typeof gameState.upgrades[u.id] !== 'number') gameState.upgrades[u.id] = 0;
+            });
+            RESEARCH_DATA.forEach(r => {
+                if (typeof gameState.researches[r.id] !== 'boolean') gameState.researches[r.id] = false;
+            });
+            if (gameState.flowerStage >= FLOWER_STAGES.length) {
+                gameState.flowerStage = FLOWER_STAGES.length - 1;
+            }
+
+            document.getElementById('headerUserAvatar').textContent = currentAccountMeta.avatar;
+            document.getElementById('headerUserName').textContent = currentAccountMeta.username;
+            document.getElementById('authOverlayModal').classList.add('hidden');
+
+            // Offline kazanç kontrolü
+            const now = Date.now();
+            const elapsedSeconds = Math.min(8 * 3600, Math.floor((now - gameState.lastSaveTime) / 1000));
+            const cps = getPollenPerSecond();
+            if (elapsedSeconds > 15 && cps > 0) {
+                const offlineEarned = Math.floor(cps * elapsedSeconds * 0.6);
+                if (offlineEarned > 0) {
+                    gameState.pollen += offlineEarned;
+                    gameState.totalPollenEarned += offlineEarned;
+                    document.getElementById('offlineEarnedAmount').textContent = `+${formatNumber(offlineEarned)}`;
+                    document.getElementById('offlineModal').classList.remove('hidden');
+                }
+            }
+
+            lastDecorSignature = '';
+            renderFlowerVisual();
+            renderUpgradesList();
+            renderEvolutionCatalog();
+            updateUI();
+        }
+
+        async function submitAuthForm(e) {
+            e.preventDefault();
+            const errBox = document.getElementById('authErrorBox');
+            errBox.classList.add('hidden');
+
+            const rawName = document.getElementById('authUsernameInput').value.trim();
+            const pin = document.getElementById('authPinInput').value.trim();
+            const key = normalizeUsername(rawName);
+
+            if (key.length < 2) {
+                showAuthError('Lütfen en az 2 karakterli geçerli bir kullanıcı adı yazın.');
+                return;
+            }
+            if (pin.length < 4 || pin.length > 16) {
+                showAuthError('Şifreniz en az 4, en fazla 16 karakter olmalıdır.');
+                return;
+            }
+            if (authMode === 'register' && !document.getElementById('authKvkkCheck').checked) {
+                showAuthError('Kayıt olabilmek için KVKK Aydınlatma Metni ve Kullanım Koşullarını onaylamalısınız.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('authSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Kontrol ediliyor...';
+
+            try {
+                if (db && auth?.currentUser) {
+                    const accRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', key);
+
+                    if (authMode === 'register') {
+                        const newAccount = {
+                            username: rawName,
+                            usernameKey: key,
+                            pin: pin,
+                            avatar: selectedAvatar,
+                            ownerUid: auth.currentUser.uid,
+                            pollen: 0,
+                            totalPollenEarned: 0,
+                            totalClicks: 0,
+                            flowerStage: 0,
+                            prestigeSeeds: 0,
+                            upgrades: {},
+                            researches: {},
+                            kvkkAccepted: true,
+                            lastSaveTime: Date.now(),
+                            createdAt: Date.now()
+                        };
+
+                        // Atomik işlem ile aynı kullanıcı adının birden fazla kez alınmasını engelle (gerekirse standart kontrolle yedekle)
+                        try {
+                            await runTransaction(db, async (transaction) => {
+                                const existingDoc = await transaction.get(accRef);
+                                if (existingDoc.exists()) {
+                                    throw new Error('USERNAME_TAKEN');
+                                }
+                                transaction.set(accRef, newAccount);
+                            });
+                        } catch (txErr) {
+                            if (txErr && txErr.message === 'USERNAME_TAKEN') {
+                                throw txErr;
+                            }
+                            const checkSnap = await getDoc(accRef);
+                            if (checkSnap.exists()) {
+                                throw new Error('USERNAME_TAKEN');
+                            }
+                            await setDoc(accRef, newAccount);
+                        }
+
+                        await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'session', 'current'), { usernameKey: key });
+
+                        applyAccountDataToGame(newAccount, key);
+                        playSound('evolve');
+                        showToast(`🎉 Hoş geldin ${rawName}! Benzersiz hesabın buluta kaydedildi.`);
+                    } else {
+                        const accSnap = await getDoc(accRef);
+                        if (!accSnap.exists()) {
+                            showAuthError(`"${rawName}" adında bir kayıt bulunamadı. "Yeni Kayıt Ol" sekmesinden hemen açabilirsin!`);
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = '📱 Bahçeme Giriş Yap';
+                            return;
+                        }
+
+                        const existing = accSnap.data();
+                        if (existing.pin !== pin) {
+                            showAuthError('Girdiğin şifre hatalı! Lütfen tekrar dene.');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = '📱 Bahçeme Giriş Yap';
+                            return;
+                        }
+
+                        await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'session', 'current'), { usernameKey: key });
+                        applyAccountDataToGame(existing, key);
+                        playSound('upgrade');
+                        showToast(`🌿 Tekrar hoş geldin, ${existing.username}!`);
+                    }
+                } else {
+                    // Çevrimdışı bellek yedeği
+                    if (authMode === 'register') {
+                        if (memoryAccountsFallback[key]) {
+                            showAuthError(`"${rawName}" kullanıcı adı zaten kullanılıyor! Farklı bir isim seç.`);
+                            return;
+                        }
+                        const newAccount = {
+                            username: rawName,
+                            usernameKey: key,
+                            pin,
+                            avatar: selectedAvatar,
+                            pollen: 0,
+                            totalPollenEarned: 0,
+                            totalClicks: 0,
+                            flowerStage: 0,
+                            prestigeSeeds: 0,
+                            upgrades: {},
+                            researches: {},
+                            lastSaveTime: Date.now()
+                        };
+                        memoryAccountsFallback[key] = newAccount;
+                        applyAccountDataToGame(newAccount, key);
+                        showToast(`🎉 Hoş geldin ${rawName}!`);
+                    } else if (memoryAccountsFallback[key]?.pin === pin) {
+                        applyAccountDataToGame(memoryAccountsFallback[key], key);
+                    } else {
+                        showAuthError('Hesap bulunamadı veya şifre hatalı.');
+                    }
+                }
+            } catch (err) {
+                if (err && err.message === 'USERNAME_TAKEN') {
+                    showAuthError(`"${rawName}" kullanıcı adı daha önce alınmış! Lütfen başka bir isim seç veya kendi hesabına giriş yap.`);
+                } else {
+                    console.error('Auth error:', err);
+                    showAuthError('Bağlantı sırasında bir sorun oluştu, lütfen tekrar dene.');
+                }
+            } finally {
+                submitBtn.disabled = false;
+                switchAuthMode(authMode);
+            }
+        }
+
+        async function saveGame() {
+            if (!currentAccountKey) return;
+            gameState.lastSaveTime = Date.now();
+            try {
+                if (db && auth?.currentUser) {
+                    const accRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', currentAccountKey);
+                    await setDoc(accRef, {
+                        pollen: gameState.pollen,
+                        totalPollenEarned: gameState.totalPollenEarned,
+                        totalClicks: gameState.totalClicks,
+                        flowerStage: gameState.flowerStage,
+                        prestigeSeeds: gameState.prestigeSeeds,
+                        upgrades: gameState.upgrades,
+                        researches: gameState.researches,
+                        lastSaveTime: gameState.lastSaveTime
+                    }, { merge: true });
+                } else if (memoryAccountsFallback[currentAccountKey]) {
+                    memoryAccountsFallback[currentAccountKey] = {
+                        ...memoryAccountsFallback[currentAccountKey],
+                        ...gameState
+                    };
+                }
+            } catch (err) {
+                console.error('Save game error:', err);
+            }
+        }
+
+        let profilePinRevealed = false;
+        function openProfileModal() {
+            profilePinRevealed = false;
+            document.getElementById('profileModalAvatar').textContent = currentAccountMeta.avatar;
+            document.getElementById('profileModalName').textContent = currentAccountMeta.username;
+            document.getElementById('profileCredUsername').textContent = currentAccountMeta.username;
+            document.getElementById('profileCredPin').textContent = '•'.repeat((currentAccountMeta.pin || '0000').length);
+            document.getElementById('profilePinEyeIcon').className = 'ph-bold ph-eye text-sm';
+            document.getElementById('profileFullUserId').textContent = auth?.currentUser?.uid || currentAccountKey || 'yerel-oturum';
+            document.getElementById('profileTotalClicks').textContent = formatNumber(gameState.totalClicks);
+            document.getElementById('profileStageText').textContent = `${gameState.flowerStage + 1} / ${FLOWER_STAGES.length}`;
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function toggleProfilePinReveal() {
+            profilePinRevealed = !profilePinRevealed;
+            document.getElementById('profileCredPin').textContent = profilePinRevealed
+                ? currentAccountMeta.pin
+                : '•'.repeat((currentAccountMeta.pin || '0000').length);
+            document.getElementById('profilePinEyeIcon').className = profilePinRevealed
+                ? 'ph-bold ph-eye-slash text-sm'
+                : 'ph-bold ph-eye text-sm';
+        }
+
+        function copyLoginCredentials() {
+            const text = `Çiçekçi Taha Giriş Bilgilerim - Kullanıcı Adı: ${currentAccountMeta.username} | Şifre: ${currentAccountMeta.pin}`;
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('📋 Kullanıcı adı ve şifren panoya kopyalandı!');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        async function logoutAccount() {
+            await saveGame();
+            try {
+                if (db && auth?.currentUser) {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'session', 'current'));
+                }
+            } catch (e) {}
+            currentAccountKey = null;
+            closeProfileModal();
+            document.getElementById('authUsernameInput').value = '';
+            document.getElementById('authPinInput').value = '';
+            document.getElementById('authErrorBox').classList.add('hidden');
+            document.getElementById('authOverlayModal').classList.remove('hidden');
+            switchAuthMode('login');
+        }
+
+        function subscribeLeaderboard() {
+            if (!db || !auth?.currentUser) return;
+            const accountsCol = collection(db, 'artifacts', appId, 'public', 'data', 'accounts');
+            onSnapshot(accountsCol, (snapshot) => {
+                const players = [];
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data();
+                    if (d && d.username) {
+                        players.push({
+                            key: docSnap.id,
+                            username: d.username,
+                            avatar: d.avatar || '🌹',
+                            flowerStage: Number(d.flowerStage) || 0,
+                            prestigeSeeds: Number(d.prestigeSeeds) || 0,
+                            totalPollenEarned: Number(d.totalPollenEarned) || 0,
+                            createdAt: Number(d.createdAt) || 0
+                        });
+                    }
+                });
+
+                // Dükkan sekmesindeki canlı üye sayacı ve üye listesini güncelle
+                const countEl = document.getElementById('registeredMembersCount');
+                if (countEl) countEl.textContent = `${players.length} Kayıtlı Üye`;
+
+                const membersListEl = document.getElementById('registeredMembersList');
+                if (membersListEl) {
+                    if (players.length === 0) {
+                        membersListEl.innerHTML = `<div class="text-[11px] text-slate-400 text-center py-2">Henüz kayıtlı üye bulunmuyor.</div>`;
+                    } else {
+                        const byNewest = [...players].sort((a, b) => b.createdAt - a.createdAt);
+                        membersListEl.innerHTML = byNewest.map(m => {
+                            const st = FLOWER_STAGES[m.flowerStage] || FLOWER_STAGES[0];
+                            return `
+                                <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white border border-slate-100 text-[11px]">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <span>${m.avatar}</span>
+                                        <span class="font-bold text-slate-800 truncate">${m.username}</span>
+                                    </div>
+                                    <span class="text-[10px] font-semibold text-botanic-700 shrink-0">Aşama ${m.flowerStage + 1} (${st.icon})</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+
+                players.sort((a, b) => {
+                    if (b.prestigeSeeds !== a.prestigeSeeds) return b.prestigeSeeds - a.prestigeSeeds;
+                    if (b.flowerStage !== a.flowerStage) return b.flowerStage - a.flowerStage;
+                    return b.totalPollenEarned - a.totalPollenEarned;
+                });
+
+                const listEl = document.getElementById('leaderboardList');
+                if (listEl) {
+                    if (players.length === 0) {
+                        listEl.innerHTML = `<div class="text-xs text-slate-400 text-center py-3">Henüz kayıtlı bahçeci yok. İlk sırayı sen kap!</div>`;
+                    } else {
+                        listEl.innerHTML = players.slice(0, 15).map((p, idx) => {
+                            const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+                            const isMe = p.key === currentAccountKey;
+                            const st = FLOWER_STAGES[p.flowerStage] || FLOWER_STAGES[0];
+                            return `
+                                <div class="flex items-center justify-between px-3 py-2 rounded-xl border ${isMe ? 'bg-amber-50/90 border-amber-300 shadow-sm' : 'bg-slate-50/70 border-slate-100'}">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="w-6 text-center font-extrabold text-xs shrink-0">${medal}</span>
+                                        <span class="text-lg shrink-0">${p.avatar}</span>
+                                        <div class="min-w-0">
+                                            <div class="text-xs font-extrabold text-slate-800 truncate flex items-center gap-1">
+                                                <span>${p.username}</span>
+                                                ${isMe ? '<span class="px-1.5 py-0.2 rounded bg-amber-500 text-white text-[9px]">Sen</span>' : ''}
+                                            </div>
+                                            <div class="text-[10px] text-slate-500 truncate">${st.icon} ${st.name} (Aşama ${p.flowerStage + 1}/20)</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right shrink-0 ml-2">
+                                        ${p.prestigeSeeds > 0 ? `<div class="text-[10px] font-extrabold text-amber-600">✨ ${formatNumber(p.prestigeSeeds)} Nesil</div>` : ''}
+                                        <div class="text-[11px] font-bold text-botanic-700">${formatNumber(p.totalPollenEarned)} Polen</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            }, (err) => {
+                console.error('Leaderboard snapshot error:', err);
+            });
+        }
+
+        function updateDbStatusUI(connected, detailMsg = '') {
+            isCloudConnected = connected;
+            const authBadge = document.getElementById('authDbStatusBadge');
+            const shopPill = document.getElementById('shopDbStatusPill');
+            const shopText = document.getElementById('shopDbStatusText');
+
+            if (connected) {
+                if (authBadge) {
+                    authBadge.className = 'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold';
+                    authBadge.innerHTML = '<span>🟢 Bulut Veritabanı Bağlı • Kalıcı Kayıt Aktif</span>';
+                }
+                if (shopPill) {
+                    shopPill.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200';
+                    shopPill.textContent = '🟢 Bulut Aktif';
+                }
+                if (shopText) {
+                    shopText.textContent = detailMsg || 'Tüm kullanıcı adları, şifreler ve bahçe ilerlemeleri bulut veritabanına kaydediliyor.';
+                }
+            } else {
+                if (authBadge) {
+                    authBadge.className = 'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold';
+                    authBadge.innerHTML = '<span>🟡 Harici Yayın Modu • Veritabanı Anahtarı Gerekli</span>';
+                }
+                if (shopPill) {
+                    shopPill.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 border border-amber-200';
+                    shopPill.textContent = '🟡 Bağlı Değil';
+                }
+                if (shopText) {
+                    shopText.textContent = detailMsg || 'Kendi web sitenizde yayınlarken üyeliklerin kalıcı olması için sağdaki butondan Firebase bağlantısı ekleyin.';
+                }
+            }
+        }
+
+        function openDbSetupModal() {
+            document.getElementById('dbSetupErrorBox').classList.add('hidden');
+            document.getElementById('dbSetupModal').classList.remove('hidden');
+        }
+
+        function closeDbSetupModal() {
+            document.getElementById('dbSetupModal').classList.add('hidden');
+        }
+
+        async function applyCustomDbConfig() {
+            const raw = document.getElementById('customDbConfigInput').value.trim();
+            const errBox = document.getElementById('dbSetupErrorBox');
+            errBox.classList.add('hidden');
+
+            try {
+                // Kullanıcının yapıştırdığı JS objesi veya JSON metnini güvenli şekilde ayrıştır
+                const cleaned = raw
+                    .replace(/^const\s+\w+\s*=\s*/, '')
+                    .replace(/;$/, '')
+                    .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                    .replace(/'/g, '"');
+                const parsed = JSON.parse(cleaned);
+                if (!parsed.apiKey || !parsed.projectId) {
+                    throw new Error('apiKey ve projectId alanları eksik.');
+                }
+                firebaseConfig = parsed;
+                app = initializeApp(firebaseConfig, 'custom-cicekci-taha-' + Date.now());
+                auth = getAuth(app);
+                db = getFirestore(app);
+                await signInAnonymously(auth);
+                updateDbStatusUI(true, `Özel veritabanı (${parsed.projectId}) başarıyla bağlandı! Kalıcı yayın için bu JSON bilgisini kod içindeki CUSTOM_FIREBASE_CONFIG alanına yapıştırın.`);
+                subscribeLeaderboard();
+                if (currentAccountKey) {
+                    await saveGame();
+                }
+                closeDbSetupModal();
+                showToast('✅ Bulut veritabanı bağlantısı başarıyla kuruldu!');
+            } catch (e) {
+                errBox.textContent = 'Geçersiz yapılandırma formatı: ' + (e.message || 'Lütfen geçerli Firebase JSON kodunu yapıştırın.');
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        async function initFirebaseAndSession() {
+            const submitBtn = document.getElementById('authSubmitBtn');
+            try {
+                if (firebaseConfig) {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    try {
+                        if (!CUSTOM_FIREBASE_CONFIG && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (tokenErr) {
+                        await signInAnonymously(auth);
+                    }
+
+                    authReady = true;
+                    updateDbStatusUI(true);
+                    switchAuthMode('register');
+                    submitBtn.disabled = false;
+
+                    subscribeLeaderboard();
+
+                    // Aynı cihazdan daha önce giriş yapılmışsa otomatik oturumu aç
+                    const user = auth.currentUser;
+                    if (user) {
+                        const consentSnap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'preferences', 'consent'));
+                        if (consentSnap.exists() && consentSnap.data().decided) {
+                            consentPreferences = { ...consentPreferences, ...consentSnap.data() };
+                            document.getElementById('consentBanner').classList.add('hidden');
+                        }
+
+                        const sessionSnap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'session', 'current'));
+                        if (sessionSnap.exists() && sessionSnap.data().usernameKey) {
+                            const savedKey = sessionSnap.data().usernameKey;
+                            const accSnap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'accounts', savedKey));
+                            if (accSnap.exists()) {
+                                applyAccountDataToGame(accSnap.data(), savedKey);
+                                return;
+                            }
+                        }
+                    }
+                } else {
+                    authReady = true;
+                    updateDbStatusUI(false);
+                    switchAuthMode('register');
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Firebase init error:', err);
+                authReady = true;
+                updateDbStatusUI(false, 'Veritabanı bağlantısı kurulamadı. Dükkan sekmesinden bağlantı ayarlarını kontrol edin.');
+                switchAuthMode('register');
+                submitBtn.disabled = false;
+            }
+        }
+
+        // --- 14B. ÇEREZ TERCİH YÖNETİMİ & YASAL METİN MODALLARI ---
+        let consentPreferences = {
+            decided: false,
+            essential: true,
+            functional: true,
+            analytics: true
+        };
+
+        async function persistConsentPreferences() {
+            consentPreferences.decided = true;
+            document.getElementById('consentBanner').classList.add('hidden');
+            try {
+                if (db && auth?.currentUser) {
+                    await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'preferences', 'consent'), {
+                        ...consentPreferences,
+                        updatedAt: Date.now()
+                    }, { merge: true });
+                }
+            } catch (e) {
+                console.error('Consent save error:', e);
+            }
+        }
+
+        function acceptAllCookies() {
+            consentPreferences.functional = true;
+            consentPreferences.analytics = true;
+            closeCookiePrefsModal();
+            persistConsentPreferences();
+            showToast('✅ Tüm çerez ve gizlilik tercihleri onaylandı.');
+        }
+
+        function acceptEssentialCookies() {
+            consentPreferences.functional = false;
+            consentPreferences.analytics = false;
+            closeCookiePrefsModal();
+            persistConsentPreferences();
+            showToast('🔒 Sadece zorunlu oturum çerezleri aktif edildi.');
+        }
+
+        function openCookiePrefsModal() {
+            document.getElementById('prefFunctionalCheck').checked = consentPreferences.functional;
+            document.getElementById('prefAnalyticsCheck').checked = consentPreferences.analytics;
+            document.getElementById('cookiePrefsModal').classList.remove('hidden');
+        }
+
+        function closeCookiePrefsModal() {
+            document.getElementById('cookiePrefsModal').classList.add('hidden');
+        }
+
+        function saveCustomCookiePrefs() {
+            consentPreferences.functional = document.getElementById('prefFunctionalCheck').checked;
+            consentPreferences.analytics = document.getElementById('prefAnalyticsCheck').checked;
+            closeCookiePrefsModal();
+            persistConsentPreferences();
+            showToast('🍪 Çerez tercihleriniz kaydedildi.');
+        }
+
+        const LEGAL_TEXTS = {
+            kvkk: {
+                title: 'KVKK Aydınlatma Metni ve Açık Rıza',
+                html: `
+                    <p><strong>1. Veri Sorumlusu:</strong> 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca kişisel verileriniz, veri sorumlusu sıfatıyla <strong>Çiçekçi Taha</strong> tarafından aşağıda açıklanan kapsamda işlenmektedir.</p>
+                    <p><strong>2. İşlenen Kişisel Veriler:</strong> Kayıt sırasında belirlediğiniz kullanıcı adı/takma ad, seçtiğiniz avatar simgesi, belirlediğiniz hesap şifresi, oyun içi ilerleme puanlarınız ve dükkan sıralaması verileriniz işlenmektedir. Gerçek ad-soyad veya TC kimlik numarası talep edilmemektedir.</p>
+                    <p><strong>3. İşleme Amacı ve Hukuki Sebebi:</strong> Verileriniz; oyun hesabınızın oluşturulması, çoklu cihaz erişiminin sağlanması, liderlik tablosunun görüntülenmesi ve vitrin QR kampanya deneyiminin sunulması amaçlarıyla KVKK Madde 5/1 (Açık Rıza) ve Madde 5/2-c (Sözleşmenin Kurulması/İfası) kapsamında işlenir.</p>
+                    <p><strong>4. Açık Rıza Beyanı:</strong> Kayıt ekranındaki onay kutusunu işaretleyerek, belirlediğiniz kullanıcı adı ve oyun ilerlemenizin bulut sunucularında saklanmasına ve dükkan sıralamasında kullanıcı adınızla yer almasına açık rıza vermiş sayılırsınız.</p>
+                    <p><strong>5. KVKK Madde 11 Haklarınız:</strong> Dilediğiniz zaman profil menüsünden hesabınızı sıfırlayabilir veya Çiçekçi Taha ile iletişime geçerek verilerinizin silinmesini talep edebilirsiniz.</p>
+                `
+            },
+            cookies: {
+                title: 'Çerez (Cookie) Politikası',
+                html: `
+                    <p><strong>Çerez Nedir?</strong> Çiçekçi Taha web uygulaması, oturum güvenliğini sağlamak ve oyun deneyiminizi kesintisiz sürdürmek amacıyla tarayıcı ve bulut tabanlı oturum teknolojileri kullanır.</p>
+                    <p><strong>1. Zorunlu Oturum ve Güvenlik Çerezleri:</strong> Kimlik doğrulama oturumunuzun korunması ve başka cihazlardan giriş yaptığınızda hesabınıza güvenli bağlanmanız için teknik olarak zorunludur.</p>
+                    <p><strong>2. İşlevsel Tercih Çerezleri:</strong> Ses efektleri durumu, aktif sekme tercihi ve cihaz oturum eşleştirmesi gibi deneyimi kolaylaştıran ayarları hatırlar.</p>
+                    <p><strong>3. Performans ve Sıralama Çerezleri:</strong> Dükkan bahçecileri sıralamasının güncel tutulması ve oyun dengesinin iyileştirilmesi amacıyla anonim istatistikler üretir.</p>
+                    <p>Sayfa altındaki <strong>Çerez Tercih Yönetimi</strong> panelinden tercihlerinizi dilediğiniz an güncelleyebilirsiniz.</p>
+                `
+            },
+            privacy: {
+                title: 'Gizlilik Politikası ve Kullanım Koşulları',
+                html: `
+                    <p><strong>1. Hesap ve Benzersiz Kullanıcı Adı Kuralı:</strong> Her kullanıcı adı sistemde yalnızca bir kez kaydedilebilir. Hesap şifrenizin gizliliğinden ve güvenliğinden kullanıcı sorumludur. Tahmin edilmesi zor bir şifre belirlemeniz önerilir.</p>
+                    <p><strong>2. Uygunsuz İçerik Yasağı:</strong> Genel ahlaka aykırı, hakaret içeren veya yanıltıcı kullanıcı adları sistem yöneticisi tarafından uyarı yapılmaksızın kaldırılabilir.</p>
+                    <p><strong>3. Vitrin QR Kampanya Koşulları:</strong> Oyun içerisinde paylaşılan <strong>TAHA15</strong> indirim kodu, Çiçekçi Taha fiziki mağazasında yapılacak çiçek ve bitki alışverişlerinde kasada gösterilmek suretiyle geçerlidir; diğer kampanyalarla birleştirilemez.</p>
+                    <p><strong>4. Veri Güvenliği:</strong> Kullanıcı verileri üçüncü taraf reklam ağlarıyla paylaşılmaz ve ticari amaçla satılmaz.</p>
+                `
+            }
+        };
+
+        function openLegalModal(type) {
+            const item = LEGAL_TEXTS[type];
+            if (!item) return;
+            document.getElementById('legalModalTitle').textContent = item.title;
+            document.getElementById('legalModalBody').innerHTML = item.html;
+            document.getElementById('legalModal').classList.remove('hidden');
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legalModal').classList.add('hidden');
+        }
+
+        function closeOfflineModal() {
+            document.getElementById('offlineModal').classList.add('hidden');
+        }
+
+        function confirmHardReset() {
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        async function executeHardReset() {
+            document.getElementById('resetModal').classList.add('hidden');
+            gameState = {
+                pollen: 0,
+                totalPollenEarned: 0,
+                totalClicks: 0,
+                flowerStage: 0,
+                prestigeSeeds: 0,
+                upgrades: {},
+                researches: {},
+                lastSaveTime: Date.now()
+            };
+            lastDecorSignature = '';
+            renderFlowerVisual();
+            renderUpgradesList();
+            renderEvolutionCatalog();
+            updateUI();
+            await saveGame();
+            showToast('🔄 Bahçen sıfırlandı!');
+        }
+
+        // --- 15. ANA OYUN DÖNGÜSÜ VE BAŞLATMA ---
+        function startGameEngine() {
+            renderFlowerVisual();
+            renderUpgradesList();
+            renderEvolutionCatalog();
+            updateUI();
+
+            const clickTarget = document.getElementById('flowerClickTarget');
+            clickTarget.addEventListener('pointerdown', handleFlowerClick);
+
+            scheduleLadybug();
+            initFirebaseAndSession();
+
+            setInterval(() => {
+                if (!currentAccountKey) return;
+                const cps = getPollenPerSecond();
+                if (cps > 0) {
+                    const tickGain = cps / 10;
+                    gameState.pollen += tickGain;
+                    gameState.totalPollenEarned += tickGain;
+                    updateUI();
+                    if (currentTab === 'upgrades') {
+                        renderUpgradesList();
+                    }
+                }
+            }, 100);
+
+            let saveCounter = 0;
+            setInterval(() => {
+                if (!currentAccountKey) return;
+                if (rainBuffActive) {
+                    rainBuffRemaining--;
+                    if (rainBuffRemaining <= 0) {
+                        rainBuffActive = false;
+                        document.getElementById('rainContainer').classList.add('hidden');
+                        document.getElementById('activeBuffBanner').classList.add('hidden');
+                    }
+                }
+                if (rainCooldownRemaining > 0) {
+                    rainCooldownRemaining--;
+                }
+                updateUI();
+
+                saveCounter++;
+                if (saveCounter >= 10) {
+                    saveGame();
+                    saveCounter = 0;
+                }
+            }, 1000);
+        }
+
+        // Inline HTML eventleri için global erişim tanımları
+        window.toggleSound = toggleSound;
+        window.switchTab = switchTab;
+        window.claimLadybug = claimLadybug;
+        window.evolveFlower = evolveFlower;
+        window.triggerRainSkill = triggerRainSkill;
+        window.filterShop = filterShop;
+        window.setBuyMultiplier = setBuyMultiplier;
+        window.buyUpgrade = buyUpgrade;
+        window.buyResearch = buyResearch;
+        window.openPrestigeModal = openPrestigeModal;
+        window.closePrestigeModal = closePrestigeModal;
+        window.confirmPrestige = confirmPrestige;
+        window.copyPromoCode = copyPromoCode;
+        window.confirmHardReset = confirmHardReset;
+        window.executeHardReset = executeHardReset;
+        window.closeOfflineModal = closeOfflineModal;
+        window.switchAuthMode = switchAuthMode;
+        window.selectAuthAvatar = selectAuthAvatar;
+        window.submitAuthForm = submitAuthForm;
+        window.openProfileModal = openProfileModal;
+        window.closeProfileModal = closeProfileModal;
+        window.logoutAccount = logoutAccount;
+        window.toggleAuthPasswordVisibility = toggleAuthPasswordVisibility;
+        window.toggleProfilePinReveal = toggleProfilePinReveal;
+        window.copyLoginCredentials = copyLoginCredentials;
+        window.acceptAllCookies = acceptAllCookies;
+        window.acceptEssentialCookies = acceptEssentialCookies;
+        window.openCookiePrefsModal = openCookiePrefsModal;
+        window.closeCookiePrefsModal = closeCookiePrefsModal;
+        window.saveCustomCookiePrefs = saveCustomCookiePrefs;
+        window.openLegalModal = openLegalModal;
+        window.closeLegalModal = closeLegalModal;
+        window.openDbSetupModal = openDbSetupModal;
+        window.closeDbSetupModal = closeDbSetupModal;
+        window.applyCustomDbConfig = applyCustomDbConfig;
+
+        if (document.readyState === 'complete') {
+            startGameEngine();
+        } else {
+            window.addEventListener('load', startGameEngine);
+        }
+    </script>
+</body>
+</html>
