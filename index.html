@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Çiçekçi Taha | Sonsuz Botanik Bahçesi</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,14 +47,34 @@
         /* Mobil dokunma deneyimi için çift tıklama zoom engelleme ve seçim kapatma */
         * {
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
+        }
+
+        /* Mobil form alanlarında rahat yazım ve iOS otomatik ekran yakınlaştırmasını (16px+) engelleme */
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+            font-size: 16px !important;
         }
         
         html, body {
             touch-action: manipulation;
             background-color: #FDFBF7;
-            overscroll-behavior-y: contain;
+            overscroll-behavior: none;
+            overscroll-behavior-y: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #gardenStageArea, #flowerClickTarget {
+            touch-action: none;
+            -webkit-touch-callout: none;
         }
 
         /* Özel animasyonlar */
@@ -203,7 +223,7 @@
 <body class="text-slate-800 h-[100dvh] flex flex-col overflow-hidden bg-gradient-to-b from-botanic-50 via-cream to-rose-50/40">
 
     <!-- Üst Başlık ve Dükkan Kimliği -->
-    <header class="shrink-0 bg-white/90 backdrop-blur-md border-b border-botanic-100 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-sm gap-2">
+    <header class="shrink-0 bg-white/90 backdrop-blur-md border-b border-botanic-100 px-3 sm:px-4 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 flex items-center justify-between z-30 shadow-sm gap-2">
         <div class="flex items-center gap-2 min-w-0">
             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-2xl bg-gradient-to-br from-botanic-500 to-botanic-700 flex items-center justify-center text-white shadow-md shadow-botanic-500/20">
                 <i class="ph-fill ph-flower-lotus text-xl sm:text-2xl"></i>
@@ -264,7 +284,7 @@
     </section>
 
     <!-- ANA İÇERİK ALANI (Sekmelere göre değişir) -->
-    <main class="flex-1 overflow-y-auto relative px-4 pb-24">
+    <main class="flex-1 overflow-y-auto overscroll-y-contain relative px-3 sm:px-4 pb-[calc(6rem+env(safe-area-inset-bottom))]" style="-webkit-overflow-scrolling: touch; touch-action: pan-y;">
         <div class="max-w-lg mx-auto h-full">
 
             <!-- SEKME 1: BAHÇEM (Ana Clicker Ekranı) -->
@@ -531,7 +551,7 @@
                             <i class="ph-fill ph-whatsapp-logo text-lg"></i>
                             <span>WhatsApp Sipariş</span>
                         </a>
-                        <a href="https://instagram.com/cicekci.taha" target="_blank" rel="noopener noreferrer" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 transition">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 transition">
                             <i class="ph-fill ph-instagram-logo text-lg"></i>
                             <span>Instagram'da Biz</span>
                         </a>
@@ -574,11 +594,11 @@
                         <span>Vitrin QR Ziyaretçilerine Özel!</span>
                     </div>
                     <p class="text-xs text-slate-600 mt-1">
-                        Bu oyunu oynayıp 4. seviyeye gelen ve kasada gösteren herkese tüm buket ve saksı çiçeklerinde <b>%10 İndirim</b> hediye!
+                        Bu oyunu oynayıp kasada Taha'ya gösteren herkese tüm buket ve saksı çiçeklerinde <b>%15 İndirim</b> hediye!
                     </p>
                     <div class="mt-2.5 flex items-center gap-2">
                         <div class="flex-1 bg-white border border-dashed border-amber-400 rounded-xl px-3 py-2 text-center font-mono font-extrabold text-sm text-amber-900 tracking-wider" id="promoCodeText">
-                            TAHA10
+                            TAHA15
                         </div>
                         <button onclick="copyPromoCode()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm active:scale-95 transition">
                             Kopyala
@@ -597,33 +617,22 @@
                     </button>
                 </div>
 
-                <!-- Bulut Üyelik Veritabanı Durumu & Kayıtlı Üyeler (Dükkan QR Yayını İçin) -->
-                <div class="bg-white rounded-2xl p-4 border border-botanic-200/80 shadow-sm space-y-3">
+                <!-- Kayıtlı Bahçeci Üye Listesi -->
+                <div class="bg-white rounded-2xl p-4 border border-botanic-100 shadow-sm space-y-3">
                     <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <h3 class="font-serif font-bold text-sm text-botanic-900 flex items-center gap-1.5">
-                                <span>☁️</span>
-                                <span>Üyelik & Bulut Veritabanı Durumu</span>
-                            </h3>
-                            <p id="shopDbStatusText" class="text-[11px] text-slate-500 mt-0.5">Bağlantı kontrol ediliyor...</p>
-                        </div>
-                        <span id="shopDbStatusPill" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">
-                            Kontrol Ediliyor
+                        <h3 class="font-serif font-bold text-sm text-botanic-900 flex items-center gap-1.5">
+                            <span>🌿</span>
+                            <span>Kayıtlı Bahçeci Üyeler</span>
+                        </h3>
+                        <span id="registeredMembersCount" class="shrink-0 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-botanic-50 text-botanic-700 border border-botanic-200">
+                            0 Üye
                         </span>
                     </div>
 
-                    <div class="p-3 rounded-xl bg-botanic-50/70 border border-botanic-100 flex items-center justify-between gap-2">
-                        <div>
-                            <div class="text-[11px] font-bold text-botanic-900">Toplam Kayıtlı Bahçeci Üye</div>
-                            <div id="registeredMembersCount" class="text-base font-extrabold text-botanic-700">0 Üye</div>
-                        </div>
-                        
-                    </div>
-
-                    <details class="group rounded-xl bg-slate-50 border border-slate-200/80 p-2.5">
-                        <summary class="text-xs font-bold text-slate-700 cursor-pointer flex items-center justify-between list-none">
-                            <span>📋 Kayıtlı Üye Listesini Gör (Canlı)</span>
-                            <i class="ph-bold ph-caret-down text-slate-500 group-open:rotate-180 transition-transform"></i>
+                    <details open class="group rounded-xl bg-botanic-50/50 border border-botanic-100 p-2.5">
+                        <summary class="text-xs font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
+                            <span>📋 Üye Listesini Göster / Gizle</span>
+                            <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
                         </summary>
                         <div id="registeredMembersList" class="mt-2.5 space-y-1.5 max-h-48 overflow-y-auto">
                             <div class="text-[11px] text-slate-400 text-center py-2">Henüz kayıtlı üye bulunmuyor.</div>
@@ -677,11 +686,11 @@
 
                         <details class="group rounded-xl bg-botanic-50/60 border border-botanic-100 p-2.5">
                             <summary class="font-bold text-botanic-900 cursor-pointer flex items-center justify-between list-none">
-                                <span>4. Dükkandaki %10 indirim kodunu nasıl kullanabilirim?</span>
+                                <span>4. Dükkandaki %15 indirim kodunu nasıl kullanabilirim?</span>
                                 <i class="ph-bold ph-caret-down text-botanic-600 group-open:rotate-180 transition-transform"></i>
                             </summary>
                             <p class="text-slate-600 mt-1.5 leading-relaxed">
-                                Üst veya alt menüdeki <strong>Çiçekçi Taha</strong> sekmesinde yer alan <strong>TAHA10</strong> kodunu kasada göstererek taze buket ve saksı bitkilerinde indirim avantajından yararlanabilirsin.
+                                Üst veya alt menüdeki <strong>Çiçekçi Taha</strong> sekmesinde yer alan <strong>TAHA15</strong> kodunu kasada göstererek taze buket ve saksı bitkilerinde indirim avantajından yararlanabilirsin.
                             </p>
                         </details>
                     </div>
@@ -719,7 +728,7 @@
     </main>
 
     <!-- ALT NAVİGASYON ÇUBUĞU (Mobil Tek El Kullanımına Uygun) -->
-    <nav class="shrink-0 fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-botanic-100 px-2 py-1.5 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+    <nav class="shrink-0 fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-botanic-100 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
         <div class="max-w-lg mx-auto grid grid-cols-4 gap-1">
             <button onclick="switchTab('garden')" id="nav-garden" class="nav-btn active flex flex-col items-center justify-center py-1.5 rounded-xl text-botanic-700 bg-botanic-50 font-bold transition">
                 <i class="ph-fill ph-flower text-xl"></i>
@@ -742,7 +751,7 @@
     </nav>
 
     <!-- ÇEREZ & KVKK ONAY BANNER'I -->
-    <div id="consentBanner" class="fixed bottom-16 inset-x-0 z-45 px-3 pb-2 pointer-events-none">
+    <div id="consentBanner" class="fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom))] inset-x-0 z-45 px-3 pb-2 pointer-events-none">
         <div class="max-w-lg mx-auto bg-slate-900/95 text-white backdrop-blur-md rounded-2xl p-3.5 shadow-2xl border border-white/15 pointer-events-auto">
             <div class="flex items-start gap-2.5">
                 <span class="text-xl shrink-0">🍪</span>
@@ -913,14 +922,14 @@
                         <label for="authUsernameInput" class="block text-[11px] font-bold text-slate-600">Kullanıcı Adın (Benzersiz):</label>
                         <span id="usernameUniqueHint" class="text-[10px] font-semibold text-botanic-600">Her isim 1 kez alınabilir</span>
                     </div>
-                    <input id="authUsernameInput" type="text" minlength="2" maxlength="18" autocomplete="username" placeholder="Örn: taha_cicek, zeynep34..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-sm font-semibold text-slate-800 bg-slate-50/70" required>
+                    <input id="authUsernameInput" type="text" minlength="2" maxlength="18" autocomplete="username" placeholder="Örn: taha_cicek, zeynep34..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-base font-semibold text-slate-800 bg-slate-50/70" required>
                 </div>
 
                 <!-- Şifre / PIN Alanı -->
                 <div>
                     <label for="authPinInput" class="block text-[11px] font-bold text-slate-600 mb-1">Şifren (En az 4 karakter/rakam):</label>
                     <div class="relative">
-                        <input id="authPinInput" type="password" minlength="4" maxlength="16" autocomplete="current-password" placeholder="Örn: 1234 veya taha26" class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-sm font-bold tracking-wider text-slate-800 bg-slate-50/70" required>
+                        <input id="authPinInput" type="password" minlength="4" maxlength="16" autocomplete="current-password" placeholder="Örn: 1234 veya taha26" class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none text-base font-bold tracking-wider text-slate-800 bg-slate-50/70" required>
                         <button type="button" onclick="toggleAuthPasswordVisibility()" aria-label="Şifreyi Göster veya Gizle" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1">
                             <i id="authEyeIcon" class="ph-bold ph-eye text-base"></i>
                         </button>
@@ -1063,46 +1072,6 @@
                 </button>
                 <button onclick="executeHardReset()" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md active:scale-95 transition">
                     Evet, Sıfırla
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- HARİCİ YAYIN (QR KOD) BULUT VERİTABANI BAĞLANTI MODALI -->
-    <div id="dbSetupModal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-botanic-200 space-y-3 my-auto">
-            <div class="flex items-center justify-between">
-                <h3 class="font-serif font-bold text-base sm:text-lg text-botanic-900 flex items-center gap-1.5">
-                    <span>☁️</span>
-                    <span>Canlı Site & Veritabanı Bağlantısı</span>
-                </h3>
-                <button type="button" onclick="closeDbSetupModal()" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-                    <i class="ph-bold ph-x"></i>
-                </button>
-            </div>
-
-           
-
-            <div class="text-[11px] text-slate-600 space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                <div class="font-bold text-slate-800">2 Dakikada Ücretsiz Kurulum Adımları:</div>
-                <div>• <strong>console.firebase.google.com</strong> adresinden ücretsiz proje oluşturun.</div>
-                <div>• <strong>Authentication</strong> bölümünden <em>Anonymous (Anonim)</em> girişi aktif edin.</div>
-                <div>• <strong>Firestore Database</strong> oluşturun ve Web Uygulaması (<code>&lt;/&gt;</code>) ekleyip verilen <code>firebaseConfig</code> JSON bilgisini aşağıya yapıştırın.</div>
-            </div>
-
-            <div>
-                <label for="customDbConfigInput" class="block text-[11px] font-bold text-slate-700 mb-1">Firebase Yapılandırma JSON Kodu:</label>
-                <textarea id="customDbConfigInput" rows="4" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..."}' class="w-full p-2.5 rounded-xl border border-slate-200 focus:border-botanic-500 focus:outline-none font-mono text-[11px] text-slate-800 bg-slate-50"></textarea>
-            </div>
-
-            <div id="dbSetupErrorBox" class="hidden p-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-semibold"></div>
-
-            <div class="grid grid-cols-2 gap-2 pt-1">
-                <button type="button" onclick="closeDbSetupModal()" class="py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
-                    Kapat
-                </button>
-                <button type="button" onclick="applyCustomDbConfig()" class="py-2.5 rounded-xl bg-botanic-600 hover:bg-botanic-700 text-white font-extrabold text-xs shadow-md active:scale-95 transition">
-                    Bağlantıyı Test Et & Kaydet
                 </button>
             </div>
         </div>
@@ -2551,76 +2520,15 @@
         function updateDbStatusUI(connected, detailMsg = '') {
             isCloudConnected = connected;
             const authBadge = document.getElementById('authDbStatusBadge');
-            const shopPill = document.getElementById('shopDbStatusPill');
-            const shopText = document.getElementById('shopDbStatusText');
 
-            if (connected) {
-                if (authBadge) {
+            if (authBadge) {
+                if (connected) {
                     authBadge.className = 'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold';
-                    authBadge.innerHTML = '<span>🟢 Bulut Veritabanı Bağlı • Kalıcı Kayıt Aktif</span>';
-                }
-                if (shopPill) {
-                    shopPill.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200';
-                    shopPill.textContent = '🟢 Bulut Aktif';
-                }
-                if (shopText) {
-                    shopText.textContent = detailMsg || 'Tüm kullanıcı adları, şifreler ve bahçe ilerlemeleri bulut veritabanına kaydediliyor.';
-                }
-            } else {
-                if (authBadge) {
+                    authBadge.innerHTML = '<span>🌿 Çiçekçi Taha Üyelik Sistemi Aktif</span>';
+                } else {
                     authBadge.className = 'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold';
-                    authBadge.innerHTML = '<span>🟡 Harici Yayın Modu • Veritabanı Anahtarı Gerekli</span>';
+                    authBadge.innerHTML = '<span>🌱 Çiçekçi Taha Bahçesi</span>';
                 }
-                if (shopPill) {
-                    shopPill.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 border border-amber-200';
-                    shopPill.textContent = '🟡 Bağlı Değil';
-                }
-                if (shopText) {
-                    shopText.textContent = detailMsg || 'Kendi web sitenizde yayınlarken üyeliklerin kalıcı olması için sağdaki butondan Firebase bağlantısı ekleyin.';
-                }
-            }
-        }
-
-        function openDbSetupModal() {
-            document.getElementById('dbSetupErrorBox').classList.add('hidden');
-            document.getElementById('dbSetupModal').classList.remove('hidden');
-        }
-
-        function closeDbSetupModal() {
-            document.getElementById('dbSetupModal').classList.add('hidden');
-        }
-
-        async function applyCustomDbConfig() {
-            const raw = document.getElementById('customDbConfigInput').value.trim();
-            const errBox = document.getElementById('dbSetupErrorBox');
-            errBox.classList.add('hidden');
-
-            try {
-                // Kullanıcının yapıştırdığı JS objesi veya JSON metnini güvenli şekilde ayrıştır
-                const cleaned = raw
-                    .replace(/^const\s+\w+\s*=\s*/, '')
-                    .replace(/;$/, '')
-                    .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
-                    .replace(/'/g, '"');
-                const parsed = JSON.parse(cleaned);
-                if (!parsed.apiKey || !parsed.projectId) {
-                    throw new Error('apiKey ve projectId alanları eksik.');
-                }
-                firebaseConfig = parsed;
-                app = initializeApp(firebaseConfig, 'custom-cicekci-taha-' + Date.now());
-                auth = getAuth(app);
-                db = getFirestore(app);
-                await signInAnonymously(auth);
-                updateDbStatusUI(true, `Özel veritabanı (${parsed.projectId}) başarıyla bağlandı! Kalıcı yayın için bu JSON bilgisini kod içindeki CUSTOM_FIREBASE_CONFIG alanına yapıştırın.`);
-                subscribeLeaderboard();
-                if (currentAccountKey) {
-                    await saveGame();
-                }
-                closeDbSetupModal();
-                showToast('✅ Bulut veritabanı bağlantısı başarıyla kuruldu!');
-            } catch (e) {
-                errBox.textContent = 'Geçersiz yapılandırma formatı: ' + (e.message || 'Lütfen geçerli Firebase JSON kodunu yapıştırın.');
-                errBox.classList.remove('hidden');
             }
         }
 
@@ -2814,14 +2722,51 @@
         }
 
         // --- 15. ANA OYUN DÖNGÜSÜ VE BAŞLATMA ---
+        function initMobileAntiZoom() {
+            // iOS Safari pinch-to-zoom ve iki parmak yakınlaştırma hareketlerini engelle
+            ['gesturestart', 'gesturechange', 'gestureend'].forEach(evtName => {
+                document.addEventListener(evtName, (e) => {
+                    e.preventDefault();
+                }, { passive: false });
+            });
+
+            // Hızlı ardışık dokunmalarda (double-tap zoom) tarayıcı yakınlaştırmasını engelle
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (e) => {
+                const now = Date.now();
+                const tag = e.target && e.target.tagName;
+                if (tag !== 'INPUT' && tag !== 'TEXTAREA' && (now - lastTouchEnd <= 320)) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
+
+            // Çift tıklama zoom olayını devre dışı bırak
+            document.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+            }, { passive: false });
+
+            // Çoklu parmak dokunmalarında ekran ölçeklenmesini engelle
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
         function startGameEngine() {
+            initMobileAntiZoom();
             renderFlowerVisual();
             renderUpgradesList();
             renderEvolutionCatalog();
             updateUI();
 
             const clickTarget = document.getElementById('flowerClickTarget');
-            clickTarget.addEventListener('pointerdown', handleFlowerClick);
+            clickTarget.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'touch') e.preventDefault();
+                handleFlowerClick(e);
+            }, { passive: false });
+            clickTarget.addEventListener('contextmenu', (e) => e.preventDefault());
 
             scheduleLadybug();
             initFirebaseAndSession();
@@ -2897,9 +2842,6 @@
         window.saveCustomCookiePrefs = saveCustomCookiePrefs;
         window.openLegalModal = openLegalModal;
         window.closeLegalModal = closeLegalModal;
-        window.openDbSetupModal = openDbSetupModal;
-        window.closeDbSetupModal = closeDbSetupModal;
-        window.applyCustomDbConfig = applyCustomDbConfig;
 
         if (document.readyState === 'complete') {
             startGameEngine();
